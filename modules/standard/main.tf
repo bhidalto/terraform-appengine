@@ -13,8 +13,6 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   libraries -> module
   entrypoint -> module
   vpc_access_connector -> module
-  scaling_settings -> modules
-  standard_scheduler_settings -> scaling_settings submodule
   script -> module
   static_files -> module
   deployment -> module
@@ -44,8 +42,6 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
       max_instances = 10
     }
   }
-
-  delete_service_on_destroy = true
 }
 
 resource "google_storage_bucket" "bucket" {
