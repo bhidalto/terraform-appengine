@@ -18,8 +18,4 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   basic_scaling             = var.basic_scaling
   manual_scaling            = var.manual_scaling
   vpc_access_connector = var.vpc_access_connector
-
-  #TODO
-  #vpc_access_connector -> module
-
 }
