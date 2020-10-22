@@ -194,9 +194,14 @@ variable "manual_scaling" {
 }
 
 variable "vpc_access_connector" {
-    description = "(Optional) Enables VPC connectivity for standard apps."
-    type = object({
-        name = string
-    })
-    default = null
+  description = "(Optional) Enables VPC connectivity for standard apps."
+  type = object({
+    name = string
+  })
+  default = null
+
+  validation {
+    condition     = length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", var.vpc_access_connector.name)) > 0
+    error_message = "Format of VPC access connector must use the following format `projects/[$PROJECT_NAME]/locations/[$CONNECTOR_LOCATION]/connectors/[$CONNECTOR_NAME]`"
+  }
 }
