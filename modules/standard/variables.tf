@@ -143,3 +143,11 @@ variable "libraries" {
     }))
     default = null
 }
+
+variable "entrypoint" {
+    description = "(Optional) The entrypoint for the application."
+    type = object({
+        shell = string
+    })
+    default = null
+}

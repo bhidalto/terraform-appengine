@@ -13,23 +13,13 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   deployment                = var.deployment
   handlers                  = var.handlers
   libraries = var.libraries
+  entrypoint = var.entrypoint
 
 
   #TODO
   #entrypoint -> module
   #vpc_access_connector -> module
 
-
-
-  entrypoint {
-    shell = "node ./app.js"
-  }
-
-  deployment {
-    zip {
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.object.name}"
-    }
-  }
 
   #TODO use modules for scaling options
   automatic_scaling {
@@ -45,14 +35,4 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
       max_instances                 = 10
     }
   }
-}
-
-resource "google_storage_bucket" "bucket" {
-  name = "appengine-static-content"
-}
-
-resource "google_storage_bucket_object" "object" {
-  name   = "hello-world.zip"
-  bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/appengine/hello-world.zip"
 }
