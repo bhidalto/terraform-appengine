@@ -1,3 +1,3 @@
 resource "entrypoint" "entrypoint" {
-    shell = var.shell
+  shell = var.shell
 }

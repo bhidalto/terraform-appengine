@@ -12,12 +12,14 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   project                   = var.project
   deployment                = var.deployment
   handlers                  = var.handlers
-  libraries = var.libraries
-  entrypoint = var.entrypoint
+  libraries                 = var.libraries
+  entrypoint                = var.entrypoint
+  automatic_scaling         = var.automatic_scaling
+  basic_scaling             = var.basic_scaling
+  manual_scaling            = var.manual_scaling
 
 
   #TODO
-  #entrypoint -> module
   #vpc_access_connector -> module
 
 

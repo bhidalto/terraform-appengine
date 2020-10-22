@@ -1,5 +1,5 @@
 variable "target_cpu_utilization" {
-  description = "Target CPU utilization ratio to maintain when scaling. When the CPU utilisation bypasses this threshold, a new instance will be spin up. Defaults to 0.6"
+  description = "(Optional; Default: 0.6)Target CPU utilization ratio to maintain when scaling. When the CPU utilisation bypasses this threshold, a new instance will be spin up."
   type        = number
   default     = 0.6
 
@@ -10,7 +10,7 @@ variable "target_cpu_utilization" {
 }
 
 variable "target_throughput_utilization" {
-  description = "Target throughput utilization ratio to maintain when scaling. When the target_throughput_utilization threshold is bypassed, a new instance is spun up. Defaults to 0.6"
+  description = "(Optional; Default: 0.6)Target throughput utilization ratio to maintain when scaling. When the target_throughput_utilization threshold is bypassed, a new instance is spun up."
   type        = number
   default     = 0.6
 
@@ -21,7 +21,7 @@ variable "target_throughput_utilization" {
 }
 
 variable "min_instances" {
-  description = " Minimum number of instances to run for this version. Value can be set to 0 for the system to downscale in case of no traffic being served. Defaults to 0."
+  description = "(Optional; Default: 0) Minimum number of instances to run for this version. Value can be set to 0 for the system to downscale in case of no traffic being served."
   type        = number
   default     = 0
 
@@ -32,9 +32,9 @@ variable "min_instances" {
 }
 
 variable "max_instances" {
-  description = "Maximum number of instances to run for this version. Specifying a value of 0 disables the setting. Defaults to 0."
+  description = "(Optional; Default: 1) Maximum number of instances to run for this version. Specifying a value of 0 disables the setting."
   type        = number
-  default     = 0
+  default     = 1
 
   validation {
     condition     = var.max_instances >= 0 && var.max_instances <= 2147483647

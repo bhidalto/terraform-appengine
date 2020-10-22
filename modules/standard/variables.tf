@@ -151,3 +151,33 @@ variable "entrypoint" {
     })
     default = null
 }
+
+variable "automatic_scaling" {
+    description = "(Optional) Automatic scaling is based on request rate, response latencies, and other application metrics."
+    type = object({
+        max_concurrent_requests = number,
+        max_idle_instances = any,
+        max_pending_latency = string,
+        min_idle_instances = any,
+        min_pending_latency = string,
+        standard_scheduler_settings = object({
+            target_cpu_utilization = number,
+            target_throughput_utilization = number,
+            min_instances = number,
+            max_instances = number
+        })
+    })
+    default = {
+        max_concurrent_requests = 10,
+        max_idle_instances = "automatic",
+        max_pending_latency = "30ms",
+        min_idle_instances = "automatic",
+        min_pending_latency = "0s",
+        standard_scheduler_settings = {
+            target_cpu_utilization = 0.6,
+            target_throughput_utilization = 0.6,
+            min_instances = 0,
+            max_instances = 1
+        }
+    }
+}
