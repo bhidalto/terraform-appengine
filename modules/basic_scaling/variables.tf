@@ -1,11 +1,11 @@
 variable "idle_timeout" {
-  description = "Duration of time after the last request that an instance must wait before the instance is shut down. Default is 5minutes (300s)"
+  description = "(Optional; Default: 300s)Duration of time after the last request that an instance must wait before the instance is shut down."
   type        = string
   default     = "300s"
 }
 
 variable "max_instances" {
-  description = "Maximum number of instances to create for this version. Defaults to 1."
+  description = "(Optional; Default: 1)Maximum number of instances to create for this version."
   type        = number
   default     = 1
 

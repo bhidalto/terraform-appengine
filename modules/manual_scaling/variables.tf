@@ -1,5 +1,5 @@
 variable "instances" {
-  description = "The number of instances to create for the Service. Defaults to 1."
+  description = "(Optional; Default: 1) The number of instances to create for the Service."
   type        = number
   default     = 1
 
