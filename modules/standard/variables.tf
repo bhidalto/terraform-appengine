@@ -192,3 +192,11 @@ variable "manual_scaling" {
   })
   default = null
 }
+
+variable "vpc_access_connector" {
+    description = "(Optional) Enables VPC connectivity for standard apps."
+    type = object({
+        name = string
+    })
+    default = null
+}
