@@ -112,5 +112,34 @@ variable "deployment" {
 }
 
 variable "handlers" {
-    description = "(Optional) "
+    description = "(Optional) An ordered list of URL-matching patterns that should be applied to incoming requests. The first matching URL handles the request and other request handlers are not attempted."
+    type = list(object({
+        url_regex = string,
+        security_level = string,
+        login = string,
+        auth_fail_action = string,
+        redirect_http_response_code = string,
+        script = object({
+            script_path = string
+        })
+        static files = object({
+            path = string,
+            upload_path_regex = string,
+            http_headers = map(),
+            mime_type = string,
+            expiration = string,
+            require_matching_file = bool,
+            application_readable = bool
+        })
+    }))
+    default = null
+}
+
+variable "libraries" {
+    description = "(Optional) Configuration for third-party Python runtime libraries that are required by the application."
+    type = list(object({
+        name = string,
+        version = string
+    }))
+    default = null
 }
