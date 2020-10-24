@@ -1,5 +1,5 @@
 variable "max_concurrent_requests" {
-  description = "(Optional; Default: 10)Number of concurrent requests an automatic scaling instance can accept before the scheduler spawns a new instance."
+  description = "(Optional; Default: 10) Number of concurrent requests an automatic scaling instance can accept before the scheduler spawns a new instance."
   type        = number
   default     = 10
 
@@ -10,7 +10,7 @@ variable "max_concurrent_requests" {
 }
 
 variable "max_idle_instances" {
-  description = "(Optional; Default: automatic)Maximum number of idle instances that should be maintained for this version."
+  description = "(Optional; Default: automatic) Maximum number of idle instances that should be maintained for this version."
   type        = any
   default     = "automatic"
 
@@ -27,7 +27,7 @@ variable "max_pending_latency" {
 }
 
 variable "min_idle_instances" {
-  description = "(Optional; Default: automatic )Minimum number of idle instances that should be maintained for this version."
+  description = "(Optional; Default: automatic ) Minimum number of idle instances that should be maintained for this version."
   type        = any
   default     = "automatic"
 
@@ -38,7 +38,7 @@ variable "min_idle_instances" {
 }
 
 variable "min_pending_latency" {
-  description = "(Optional; Default: 0s)Minimum amount of time a request should wait in the pending queue before starting a new instance to handle it."
+  description = "(Optional; Default: 0s) Minimum amount of time a request should wait in the pending queue before starting a new instance to handle it."
   type        = string
   default     = "0s"
 }
