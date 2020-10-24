@@ -1,5 +1,5 @@
 variable "source_url" {
-  description = "URL to the source of the files."
+  description = "(Required) URL to the source of the files."
   type        = string
   default     = null
 }
