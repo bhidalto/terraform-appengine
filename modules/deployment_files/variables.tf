@@ -1,5 +1,5 @@
 variable "name" {
-  description = "Name of the file stored in Google Cloud Storage that are included as part of this version."
+  description = "(Required) Name of the file stored in Google Cloud Storage that are included as part of this version."
   type        = string
   default     = null
 }
@@ -11,7 +11,7 @@ variable "sha1_sum" {
 }
 
 variable "source_url" {
-  description = "URL of the file stored in Google Cloud Storage."
+  description = "(Required) URL of the file stored in Google Cloud Storage."
   type        = string
   default     = null
 }
