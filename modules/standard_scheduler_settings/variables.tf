@@ -1,5 +1,5 @@
 variable "target_cpu_utilization" {
-  description = "(Optional; Default: 0.6)Target CPU utilization ratio to maintain when scaling. When the CPU utilisation bypasses this threshold, a new instance will be spin up."
+  description = "(Optional; Default: 0.6) Target CPU utilization ratio to maintain when scaling. When the CPU utilisation bypasses this threshold, a new instance will be spin up."
   type        = number
   default     = 0.6
 
@@ -10,7 +10,7 @@ variable "target_cpu_utilization" {
 }
 
 variable "target_throughput_utilization" {
-  description = "(Optional; Default: 0.6)Target throughput utilization ratio to maintain when scaling. When the target_throughput_utilization threshold is bypassed, a new instance is spun up."
+  description = "(Optional; Default: 0.6) Target throughput utilization ratio to maintain when scaling. When the target_throughput_utilization threshold is bypassed, a new instance is spun up."
   type        = number
   default     = 0.6
 
