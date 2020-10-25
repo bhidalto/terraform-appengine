@@ -27,7 +27,7 @@ variable "login" {
 }
 
 variable "auth_fail_action" {
-  description = "(Optional; Default: AUTH_FAIL_ACTION_REDIRECT)Actions to take when the user is not logged in"
+  description = "(Optional; Default: AUTH_FAIL_ACTION_REDIRECT) Actions to take when the user is not logged in."
   type        = string
   default     = "AUTH_FAIL_ACTION_REDIRECT"
 

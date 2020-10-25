@@ -7,13 +7,13 @@ This module is intended to easily create a Static Files module for the Handlers 
 ```
 module "handler_static_files" {
   source = "git::https://github.com/bhidalto/terraform-appengine/modules/handler_static_files"
-  path                  = my/path/to/file
-  upload_path_regex     = archives/(.*)/items/(.*)
+  path                  = "static/\1"
+  upload_path_regex     = "static/.*\.(gif|png|jpg)$"
   http_headers          = {
       X-Foo-Header: foo
       X-Bar-Header: bar value
   }
-  mime_type             = application/json
+  mime_type             = "application/json"
   expiration            = "600s"
   require_matching_file = false
   application_readable  = false
@@ -26,7 +26,7 @@ Below is the list of available variables to be used upon creation of the Handler
 
 | Variable | Description | Default value|
 | --- | --- | -- |
-| [path](https://cloud.google.com/appengine/docs/standard/python/config/appref#handlers_url) | (Optional) Path to the static files matched by the URL pattern, from the application root directory. The path can refer to text matched in groupings in the URL pattern. | -- |
+| [path](https://cloud.google.com/appengine/docs/standard/python/config/appref#handlers_static_files) | (Optional) Path to the static files matched by the URL pattern, from the application root directory. The path can refer to text matched in groupings in the URL pattern. | -- |
 | [upload_path_regex](https://cloud.google.com/appengine/docs/standard/python/config/appref#handlers_upload) | (Optional) Regular expression that matches the file paths for all files that should be referenced by this handler. | -- |
 | [http_headers](https://cloud.google.com/appengine/docs/standard/python/config/appref#handlers_http_headers) | (Optional) HTTP headers to use for all responses from these URLs. An object containing a list of "key:value" value pairs.". | -- |
 | [mime_type](https://cloud.google.com/appengine/docs/standard/python/config/appref#handlers_mime_type) | (Optional) MIME type used to serve all files served by this handler. Defaults to file-specific MIME types, which are derived from each file's filename extension. | -- |
