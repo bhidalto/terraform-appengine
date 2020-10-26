@@ -1,11 +1,11 @@
-variable "version" {
+variable "service_version" {
   description = "(Optional) Name of the App Engine version of the Service that will be deployed."
   type        = string
   default     = null
 
   validation {
-    condition     = length(var.version) > 0 && length(var.version) < 63
-    error_message = "The version name can't be null and the length cannot exceed 63 characters"
+    condition     = length(var.service_version) > 0 && length(var.service_version) < 63
+    error_message = "The version name can't be null and the length cannot exceed 63 characters."
   }
 }
 
@@ -16,18 +16,18 @@ variable "service" {
 
   validation {
     condition     = length(var.service) > 0 && length(var.service) < 63
-    error_message = "The Service name can't be null and the length cannot exceed 63 characters"
+    error_message = "The Service name can't be null and the length cannot exceed 63 characters."
   }
 }
 
 variable "runtime" {
-  description = "(Required; Default: python27) The runtime that will be used by App Engine. Supported runtimes are: python27, python37, python38, java8, java11, php55, php73, php74, ruby25, go111, go112, go113, go114, nodejs10, nodejs12.\n "
+  description = "(Required; Default: python27) The runtime that will be used by App Engine. Supported runtimes are: python27, python37, python38, java8, java11, php55, php73, php74, ruby25, go111, go112, go113, go114, nodejs10, nodejs12."
   type        = string
   default     = "python27"
 
   validation {
     condition     = contains(["python27", "python37", "python38", "java8", "java11", "php55", "php73", "php74", "ruby25", "go111", "go112", "go113", "go114", "nodejs10", "nodejs12"], var.runtime)
-    error_message = "The specified runtime does not match any of the supported runtimes: \n - Python: python27, python37, python38 \n - Java: java8, java11 \n - PHP: php55, php73, php74 \n - Ruby: ruby25 \n - Go: go111, go112, go113, go114 \n - Node.js: nodejs10, nodejs12"
+    error_message = "The specified runtime does not match any of the supported runtimes: \n - Python: python27, python37, python38 \n - Java: java8, java11 \n - PHP: php55, php73, php74 \n - Ruby: ruby25 \n - Go: go111, go112, go113, go114 \n - Node.js: nodejs10, nodejs12."
   }
 }
 
@@ -38,7 +38,7 @@ variable "threadsafe" {
 }
 
 variable "api_version" {
-  desription = "(Optional; Default: 1)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
+  description = "(Optional; Default: 1)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
   type       = number
   default    = 1
 }
@@ -67,8 +67,8 @@ variable "instance_class" {
   default     = "F1"
 
   validation {
-    condition     = contains([B1, B2, B4, B4_1G, B8, F1, F2, F4, F4_1G], var.instance_class)
-    error_message = "Instance class must be one of [B1, B2, B4, B4_1G, B8] for BasicScaling or ManualScaling and one of [F1, F2, F4, F4_1G] for AutomaticScaling"
+    condition     = contains(["B1", "B2", "B4", "B4_1G", "B8", "F1", "F2", "F4", "F4_1G"], var.instance_class)
+    error_message = "Instance class must be one of [B1, B2, B4, B4_1G, B8] for BasicScaling or ManualScaling and one of [F1, F2, F4, F4_1G] for AutomaticScaling."
   }
 }
 
@@ -78,8 +78,8 @@ variable "inbound_services" {
   default     = null
 
   validation {
-    condition     = contains([INBOUND_SERVICE_MAIL, INBOUND_SERVICE_MAIL_BOUNCE, INBOUND_SERVICE_XMPP_ERROR, INBOUND_SERVICE_XMPP_MESSAGE, INBOUND_SERVICE_XMPP_SUBSCRIBE, INBOUND_SERVICE_XMPP_PRESENCE, INBOUND_SERVICE_CHANNEL_PRESENCE, INBOUND_SERVICE_WARMUP], var.inbound_services)
-    error_message = "Inbound services must be one of the following [INBOUND_SERVICE_MAIL, INBOUND_SERVICE_MAIL_BOUNCE, INBOUND_SERVICE_XMPP_ERROR, INBOUND_SERVICE_XMPP_MESSAGE, INBOUND_SERVICE_XMPP_SUBSCRIBE, INBOUND_SERVICE_XMPP_PRESENCE, INBOUND_SERVICE_CHANNEL_PRESENCE, INBOUND_SERVICE_WARMUP]"
+    condition     = contains(["INBOUND_SERVICE_MAIL", "INBOUND_SERVICE_MAIL_BOUNCE", "INBOUND_SERVICE_XMPP_ERROR", "INBOUND_SERVICE_XMPP_MESSAGE", "INBOUND_SERVICE_XMPP_SUBSCRIBE", "INBOUND_SERVICE_XMPP_PRESENCE", "INBOUND_SERVICE_CHANNEL_PRESENCE", "INBOUND_SERVICE_WARMUP"], var.inbound_services)
+    error_message = "Inbound services must be one of the following [INBOUND_SERVICE_MAIL, INBOUND_SERVICE_MAIL_BOUNCE, INBOUND_SERVICE_XMPP_ERROR, INBOUND_SERVICE_XMPP_MESSAGE, INBOUND_SERVICE_XMPP_SUBSCRIBE, INBOUND_SERVICE_XMPP_PRESENCE, INBOUND_SERVICE_CHANNEL_PRESENCE, INBOUND_SERVICE_WARMUP]."
   }
 }
 
@@ -117,7 +117,7 @@ variable "handlers" {
     static_files = object({
       path                  = string,
       upload_path_regex     = string,
-      http_headers          = map(),
+      http_headers          = map(string),
       mime_type             = string,
       expiration            = string,
       require_matching_file = bool,
@@ -200,6 +200,6 @@ variable "vpc_access_connector" {
 
   validation {
     condition     = length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", var.vpc_access_connector.name)) > 0
-    error_message = "Format of VPC access connector must use the following format `projects/[$PROJECT_NAME]/locations/[$CONNECTOR_LOCATION]/connectors/[$CONNECTOR_NAME]`"
+    error_message = "Format of VPC access connector must use the following format `projects/[$PROJECT_NAME]/locations/[$CONNECTOR_LOCATION]/connectors/[$CONNECTOR_NAME]`."
   }
 }

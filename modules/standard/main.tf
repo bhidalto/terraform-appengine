@@ -1,5 +1,5 @@
 resource "google_app_engine_standard_app_version" "appengine_standard" {
-  version_id                = var.version
+  version_id                = var.service_version
   service                   = ver.service
   runtime                   = var.runtime
   threadsafe                = var.threadsafe

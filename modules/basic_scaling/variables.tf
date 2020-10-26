@@ -11,6 +11,6 @@ variable "max_instances" {
 
   validation {
     condition     = var.max_instances >= 1 && var.max_instances <= 200
-    error_message = "The number of max instances needs to be in the range [1,200]"
+    error_message = "The number of max instances needs to be in the range [1,200]."
   }
 }
