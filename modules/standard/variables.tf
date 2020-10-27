@@ -39,8 +39,8 @@ variable "threadsafe" {
 
 variable "api_version" {
   description = "(Optional; Default: 1)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
-  type       = number
-  default    = 1
+  type        = number
+  default     = 1
 }
 
 variable "env_variables" {
@@ -90,21 +90,21 @@ variable "project" {
 variable "zip" {
   description = "(Optional) Zip File Structure."
   type = object({
-    source_url = string,
+    source_url  = string,
     files_count = number
   })
   default = null
 }
 
 variable "files" {
-    description = "(Optional) Manifest of the files stored in Google Cloud Storage that are included as part of this version."
+  description = "(Optional) Manifest of the files stored in Google Cloud Storage that are included as part of this version."
 
-    type = object({
-      name = string,
-      sha1_sum   = string,
-      source_url = string
-      })
-    default = null
+  type = object({
+    name       = string,
+    sha1_sum   = string,
+    source_url = string
+  })
+  default = null
 }
 
 variable "handlers" {
@@ -152,19 +152,19 @@ variable "handlers" {
     auth_fail_action            = "AUTH_FAIL_ACTION_REDIRECT",
     redirect_http_response_code = "REDIRECT_HTTP_RESPONSE_CODE_301",
     script = {
-        script_path = null
+      script_path = null
     }
     static_files = {
-        path                  = null,
-        upload_path_regex     = null,
-        http_headers          = null,
-        mime_type             = null,
-        expiration            = "600s",
-        require_matching_file = false,
-        application_readable  = false
+      path                  = null,
+      upload_path_regex     = null,
+      http_headers          = null,
+      mime_type             = null,
+      expiration            = "600s",
+      require_matching_file = false,
+      application_readable  = false
     }
   }]
-  
+
 }
 
 variable "libraries" {
@@ -173,7 +173,10 @@ variable "libraries" {
     name    = string,
     version = string
   }))
-  default = null
+  default = [{
+    name    = null,
+    version = "latest"
+  }]
 }
 
 variable "entrypoint" {
@@ -181,7 +184,9 @@ variable "entrypoint" {
   type = object({
     shell = string
   })
-  default = null
+  default = {
+    shell = null
+  }
 }
 
 variable "automatic_scaling" {
@@ -212,6 +217,35 @@ variable "automatic_scaling" {
       max_instances                 = 1
     }
   }
+
+  validation {
+    condition     = var.automatic_scaling.max_concurrent_requests >= 10 && var.automatic_scaling.max_concurrent_requests <= 80
+    error_message = "The value of max_concurrent_requests must fall within range [10, 80]"
+  }
+  validation {
+    condition     = var.automatic_scaling.max_idle_instances == "automatic" || (var.automatic_scaling.max_idle_instances >= 1 && var.automatic_scaling.max_idle_instances <= 1000)
+    error_message = "The value of max_idle_instances needs to be `automatic` or fall within range [1, 1000]"
+  }
+  validation {
+    condition     = var.automatic_scaling.min_idle_instances == "automatic" || (var.automatic_scaling.min_idle_instances >= 1 && var.automatic_scaling.min_idle_instances <= 1000)
+    error_message = "The value of min_idle_instances needs to be `automatic` or fall within range [1, 1000]"
+  }
+  validation {
+    condition     = var.automatic_scaling.standard_scheduler_settings.target_cpu_utilization >= 0.5 && var.automatic_scaling.standard_scheduler_settings.target_cpu_utilization <= 0.95
+    error_message = "The target_cpu_utilization value must fall within range [0.5, 0.95]"
+  }
+  validation {
+    condition     = var.automatic_scaling.standard_scheduler_settings.target_throughput_utilization >= 0.5 && var.automatic_scaling.standard_scheduler_settings.target_throughput_utilization <= 0.95
+    error_message = "The target_throughput_utilization value must fall within range [0.5, 0.95]"
+  }
+  validation {
+    condition     = var.automatic_scaling.standard_scheduler_settings.min_instances >= 0 && var.automatic_scaling.standard_scheduler_settings.min_instances <= 1000
+    error_message = "The min_instances value must fall within range [0,1000]"
+  }
+  validation {
+    condition     = var.automatic_scaling.standard_scheduler_settings.max_instances >= 0 && var.automatic_scaling.standard_scheduler_settings.max_instances <= 2147483647
+    error_message = "The max_instances value must fall within range [0,2147483647]"
+  }
 }
 
 variable "basic_scaling" {
@@ -220,7 +254,15 @@ variable "basic_scaling" {
     idle_timeout  = string,
     max_instances = number
   })
-  default = null
+  default = {
+    idle_timeout  = "300s"
+    max_instances = 1
+  }
+
+  validation {
+    condition     = var.max_instances >= 1 && var.max_instances <= 200
+    error_message = "The number of max instances needs to be in the range [1,200]."
+  }
 }
 
 variable "manual_scaling" {
@@ -228,7 +270,14 @@ variable "manual_scaling" {
   type = object({
     instances = number
   })
-  default = null
+  default = {
+    instances = 1
+  }
+
+  validation {
+    condition     = var.manual_scaling.instances > 0
+    error_message = "You must allocate at least 1 instance."
+  }
 }
 
 variable "vpc_access_connector" {
