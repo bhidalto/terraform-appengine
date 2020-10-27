@@ -87,20 +87,24 @@ variable "project" {
 
 }
 
-variable "deployment" {
-  description = "(Required) Code and application artifacts that make up this version."
-  type = list(object({
-    zip = list(object({
-      source_url  = string,
-      files_count = number
-    })),
-    files = list(object({
-      name       = string,
+variable "zip" {
+  description = "(Optional) Zip File Structure."
+  type = object({
+    source_url = string,
+    files_count = number
+  })
+  default = null
+}
+
+variable "files" {
+    description = "(Optional) Manifest of the files stored in Google Cloud Storage that are included as part of this version."
+
+    type = object({
+      name = string,
       sha1_sum   = string,
       source_url = string
-    }))
-  }))
-  default = null
+      })
+    default = null
 }
 
 variable "handlers" {
@@ -124,7 +128,43 @@ variable "handlers" {
       application_readable  = bool
     })
   }))
-  default = null
+
+  validation {
+    condition     = contains([SECURE_DEFAULT, SECURE_NEVER, SECURE_OPTIONAL, SECURE_ALWAYS], var.handlers.security_level)
+    error_message = "Security level field value must be one of [SECURE_DEFAULT, SECURE_NEVER, SECURE_OPTIONAL, SECURE_ALWAYS]."
+  }
+  validation {
+    condition     = contains([LOGIN_OPTIONAL, LOGIN_ADMIN, LOGIN_REQUIRED], var.handlers.login)
+    error_message = "Login field value must be one of [LOGIN_OPTIONAL, LOGIN_ADMIN, LOGIN_REQUIRED]."
+  }
+  validation {
+    condition     = contains([AUTH_FAIL_ACTION_REDIRECT, AUTH_FAIL_ACTION_UNAUTHORIZED], var.handlers.auth_fail_action)
+    error_message = "Auth fail action field value must be one of [AUTH_FAIL_ACTION_REDIRECT,AUTH_FAIL_ACTION_UNAUTHORIZED]."
+  }
+  validation {
+    condition     = contains([REDIRECT_HTTP_RESPONSE_CODE_301, REDIRECT_HTTP_RESPONSE_CODE_302, REDIRECT_HTTP_RESPONSE_CODE_303, REDIRECT_HTTP_RESPONSE_CODE_307], var.handlers.redirect_http_response_code)
+    error_message = "Redirect HTTP response code field value must be one of [REDIRECT_HTTP_RESPONSE_CODE_301, REDIRECT_HTTP_RESPONSE_CODE_302, REDIRECT_HTTP_RESPONSE_CODE_303, REDIRECT_HTTP_RESPONSE_CODE_307]."
+  }
+  default = [{
+    url_regex                   = null,
+    security_level              = "SECURE_DEFAULT",
+    login                       = "LOGIN_OPTIONAL",
+    auth_fail_action            = "AUTH_FAIL_ACTION_REDIRECT",
+    redirect_http_response_code = "REDIRECT_HTTP_RESPONSE_CODE_301",
+    script = {
+        script_path = null
+    }
+    static_files = {
+        path                  = null,
+        upload_path_regex     = null,
+        http_headers          = null,
+        mime_type             = null,
+        expiration            = "600s",
+        require_matching_file = false,
+        application_readable  = false
+    }
+  }]
+  
 }
 
 variable "libraries" {
