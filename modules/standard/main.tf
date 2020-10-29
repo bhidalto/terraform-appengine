@@ -28,13 +28,13 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
     }
   }
   dynamic "handlers" {
-    for_each = var.handlers == null ? [] : list(var.handlers)
+    for_each = var.handlers == null ? [] : var.handlers
     content {
-      url_regex                   = handlers.value.url_regex
-      security_level              = handlers.value.security_level
-      login                       = handlers.value.login
-      auth_fail_action            = handlers.value.auth_fail_action
-      redirect_http_response_code = handlers.value.redirect_http_response_code
+      url_regex                   = var.handlers[handlers.key]["url_regex"]
+      security_level              = var.handlers[handlers.key]["security_level"]
+      login                       = var.handlers[handlers.key]["login"]
+      auth_fail_action            = var.handlers[handlers.key]["auth_fail_action"]
+      redirect_http_response_code = var.handlers[handlers.key]["redirect_http_response_code"]
       dynamic "script" {
         for_each = handlers.value.script == null ? [] : list(handlers.value.script)
         content {
@@ -56,28 +56,28 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
     }
   }
   dynamic "libraries" {
-    for_each = var.libraries == null ? [] : list(var.libraries)
+    for_each = var.libraries == null ? [] : var.libraries
     content {
-      name    = libraries.value.name
-      version = libraries.value.version
+      name    = var.libraries[libraries.key]["name"]
+      version = var.libraries[libraries.key]["version"]
     }
   }
   dynamic "entrypoint" {
-    for_each = var.entrypoint == null ? [] : list(var.entrypoint)
+    for_each = var.entrypoint == null ? {} : var.entrypoint
     content {
-      shell = entrypoint.value.shell
+      shell = var.entrypoint["shell"]
     }
   }
   dynamic "automatic_scaling" {
-    for_each = var.automatic_scaling == null ? [] : list(var.automatic_scaling)
+    for_each = var.automatic_scaling == null ? {} : var.automatic_scaling
     content {
-      max_concurrent_requests = automatic_scaling.value.max_concurrent_requests
-      max_idle_instances      = automatic_scaling.value.max_idle_instances
-      max_pending_latency     = automatic_scaling.value.max_pending_latency
-      min_idle_instances      = automatic_scaling.value.min_idle_instances
-      min_pending_latency     = automatic_scaling.value.min_pending_latency
+      max_concurrent_requests = var.automatic_scaling["max_concurrent_requests"]
+      max_idle_instances      = var.automatic_scaling["max_idle_instances"]
+      max_pending_latency     = var.automatic_scaling["max_pending_latency"]
+      min_idle_instances      = var.automatic_scaling["min_idle_instances"]
+      min_pending_latency     = var.automatic_scaling["min_pending_latency"]
       dynamic "standard_scheduler_settings" {
-        for_each = automatic_scaling.value.standard_scheduler_settings == null ? [] : list(automatic_scaling.value.standard_scheduler_settings)
+        for_each = var.automatic_scaling["standard_scheduler_settings"] == null ? {} : var.automatic_scaling["standard_scheduler_settings"]
         content {
           target_cpu_utilization        = standard_scheduler_settings.value.target_cpu_utilization
           target_throughput_utilization = standard_scheduler_settings.value.target_throughput_utilization
