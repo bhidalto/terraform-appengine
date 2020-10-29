@@ -14,7 +14,7 @@ module "appengine_standard" {
   source  = "../../modules/standard/"
   runtime = var.runtime
   zip = {
-    source_url = var.source_url
+    source_url  = var.source_url
     files_count = null
   }
   service        = var.service

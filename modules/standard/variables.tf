@@ -4,8 +4,8 @@ variable "service_version" {
   default     = null
 
   validation {
-    condition     = length(var.service_version) > 0 && length(var.service_version) < 63
-    error_message = "The version name can't be null and the length cannot exceed 63 characters."
+    condition     = var.service_version == null || length(var.service_version == null ? "" : var.service_version) > 0 && length(var.service_version == null ? "" : var.service_version) < 63
+    error_message = "The version name can't be empty and the length cannot exceed 63 characters."
   }
 }
 
@@ -78,7 +78,7 @@ variable "inbound_services" {
   default     = null
 
   validation {
-    condition     = var.inbound_services == "" || contains(["INBOUND_SERVICE_MAIL", "INBOUND_SERVICE_MAIL_BOUNCE", "INBOUND_SERVICE_XMPP_ERROR", "INBOUND_SERVICE_XMPP_MESSAGE", "INBOUND_SERVICE_XMPP_SUBSCRIBE", "INBOUND_SERVICE_XMPP_PRESENCE", "INBOUND_SERVICE_CHANNEL_PRESENCE", "INBOUND_SERVICE_WARMUP"], var.inbound_services)
+    condition     = var.inbound_services == null || contains(["INBOUND_SERVICE_MAIL", "INBOUND_SERVICE_MAIL_BOUNCE", "INBOUND_SERVICE_XMPP_ERROR", "INBOUND_SERVICE_XMPP_MESSAGE", "INBOUND_SERVICE_XMPP_SUBSCRIBE", "INBOUND_SERVICE_XMPP_PRESENCE", "INBOUND_SERVICE_CHANNEL_PRESENCE", "INBOUND_SERVICE_WARMUP"], (var.inbound_services == null ? "" : var.inbound_services))
     error_message = "Inbound services must be one of the following [INBOUND_SERVICE_MAIL, INBOUND_SERVICE_MAIL_BOUNCE, INBOUND_SERVICE_XMPP_ERROR, INBOUND_SERVICE_XMPP_MESSAGE, INBOUND_SERVICE_XMPP_SUBSCRIBE, INBOUND_SERVICE_XMPP_PRESENCE, INBOUND_SERVICE_CHANNEL_PRESENCE, INBOUND_SERVICE_WARMUP]."
   }
 }
@@ -94,8 +94,8 @@ variable "zip" {
     files_count = number
   })
   default = {
-      source_url = null,
-      files_count = null
+    source_url  = null,
+    files_count = null
   }
 }
 
@@ -133,19 +133,19 @@ variable "handlers" {
   }))
 
   validation {
-    condition     = contains(["SECURE_DEFAULT", "SECURE_NEVER", "SECURE_OPTIONAL", "SECURE_ALWAYS"], var.handlers.security_level)
+    condition     = ! contains([for security_level in var.handlers[*].security_level : (security_level == null || contains(["SECURE_DEFAULT", "SECURE_NEVER", "SECURE_OPTIONAL", "SECURE_ALWAYS"], (security_level == null ? "" : security_level)))], false)
     error_message = "Security level field value must be one of [SECURE_DEFAULT, SECURE_NEVER, SECURE_OPTIONAL, SECURE_ALWAYS]."
   }
   validation {
-    condition     = contains(["LOGIN_OPTIONAL", "LOGIN_ADMIN", "LOGIN_REQUIRED"], var.handlers.login)
+    condition     = ! contains([for login in var.handlers[*].login : (login == null || contains(["LOGIN_OPTIONAL", "LOGIN_ADMIN", "LOGIN_REQUIRED"], (login == null ? "" : login)))], false)
     error_message = "Login field value must be one of [LOGIN_OPTIONAL, LOGIN_ADMIN, LOGIN_REQUIRED]."
   }
   validation {
-    condition     = contains(["AUTH_FAIL_ACTION_REDIRECT", "AUTH_FAIL_ACTION_UNAUTHORIZED"], var.handlers.auth_fail_action)
+    condition     = ! contains([for auth_fail_action in var.handlers[*].auth_fail_action : (auth_fail_action == null || contains(["AUTH_FAIL_ACTION_REDIRECT", "AUTH_FAIL_ACTION_UNAUTHORIZED"], (auth_fail_action == null ? "" : auth_fail_action)))], false)
     error_message = "Auth fail action field value must be one of [AUTH_FAIL_ACTION_REDIRECT,AUTH_FAIL_ACTION_UNAUTHORIZED]."
   }
   validation {
-    condition     = contains(["REDIRECT_HTTP_RESPONSE_CODE_301", "REDIRECT_HTTP_RESPONSE_CODE_302", "REDIRECT_HTTP_RESPONSE_CODE_303", "REDIRECT_HTTP_RESPONSE_CODE_307"], var.handlers.redirect_http_response_code)
+    condition     = ! contains([for redirect_http_response_code in var.handlers[*].redirect_http_response_code : (redirect_http_response_code == null || contains(["REDIRECT_HTTP_RESPONSE_CODE_301", "REDIRECT_HTTP_RESPONSE_CODE_302", "REDIRECT_HTTP_RESPONSE_CODE_303", "REDIRECT_HTTP_RESPONSE_CODE_307"], (redirect_http_response_code == null ? "" : redirect_http_response_code)))], false)
     error_message = "Redirect HTTP response code field value must be one of [REDIRECT_HTTP_RESPONSE_CODE_301, REDIRECT_HTTP_RESPONSE_CODE_302, REDIRECT_HTTP_RESPONSE_CODE_303, REDIRECT_HTTP_RESPONSE_CODE_307]."
   }
   default = [{
@@ -226,11 +226,11 @@ variable "automatic_scaling" {
     error_message = "The value of max_concurrent_requests must fall within range [10, 80]."
   }
   validation {
-    condition     = var.automatic_scaling.max_idle_instances == "automatic" || (var.automatic_scaling.max_idle_instances >= 1 && var.automatic_scaling.max_idle_instances <= 1000)
+    condition     = var.automatic_scaling.max_idle_instances == "automatic" || ((var.automatic_scaling.max_idle_instances == "automatic" ? 0 : var.automatic_scaling.max_idle_instances) >= 1 && (var.automatic_scaling.max_idle_instances == "automatic" ? 0 : var.automatic_scaling.max_idle_instances) <= 1000)
     error_message = "The value of max_idle_instances needs to be `automatic` or fall within range [1, 1000]."
   }
   validation {
-    condition     = var.automatic_scaling.min_idle_instances == "automatic" || (var.automatic_scaling.min_idle_instances >= 1 && var.automatic_scaling.min_idle_instances <= 1000)
+    condition     = var.automatic_scaling.min_idle_instances == "automatic" || ((var.automatic_scaling.min_idle_instances == "automatic" ? 0 : var.automatic_scaling.min_idle_instances) >= 1 && (var.automatic_scaling.min_idle_instances == "automatic" ? 0 : var.automatic_scaling.min_idle_instances) <= 1000)
     error_message = "The value of min_idle_instances needs to be `automatic` or fall within range [1, 1000]."
   }
   validation {
@@ -288,10 +288,12 @@ variable "vpc_access_connector" {
   type = object({
     name = string
   })
-  default = null
+  default = {
+      name = null
+  }
 
   validation {
-    condition     = length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", var.vpc_access_connector.name)) > 0
+    condition     = var.vpc_access_connector.name == null || length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", (var.vpc_access_connector.name == null ? "" : var.vpc_access_connector.name))) > 0
     error_message = "Format of VPC access connector must use the following format `projects/[$PROJECT_NAME]/locations/[$CONNECTOR_LOCATION]/connectors/[$CONNECTOR_NAME]`."
   }
 }

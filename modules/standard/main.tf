@@ -100,5 +100,11 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
       instances = manual_scaling.value.instances
     }
   }
-  vpc_access_connector = var.vpc_access_connector
+
+  dynamic "vpc_access_connector" {
+    for_each = var.vpc_access_connector == null ? [] : list(var.vpc_access_connector)
+    content {
+      name = vpc_access_connector.value.name
+    }
+  }
 }
