@@ -194,59 +194,59 @@ variable "entrypoint" {
 
 variable "automatic_scaling" {
   description = "(Optional) Automatic scaling is based on request rate, response latencies, and other application metrics."
-  type = object({
+  type = list(object({
     max_concurrent_requests = number,
-    max_idle_instances      = any,
+    max_idle_instances      = number,
     max_pending_latency     = string,
-    min_idle_instances      = any,
-    min_pending_latency     = string,
-    standard_scheduler_settings = object({
-      target_cpu_utilization        = number,
-      target_throughput_utilization = number,
-      min_instances                 = number,
-      max_instances                 = number
-    })
-  })
-  default = {
+    min_idle_instances      = number,
+    min_pending_latency     = string
+    standard_scheduler_settings = list(object({
+        target_cpu_utilization        = number,
+        target_throughput_utilization = number,
+        min_instances                 = number,
+        max_instances                 = number
+        }))
+  }))
+  default = [{
     max_concurrent_requests = 10,
-    max_idle_instances      = "automatic",
+    max_idle_instances      = 10,
     max_pending_latency     = "30ms",
-    min_idle_instances      = "automatic",
+    min_idle_instances      = 3,
     min_pending_latency     = "0s",
-    standard_scheduler_settings = {
+    standard_scheduler_settings = [{
       target_cpu_utilization        = 0.6,
       target_throughput_utilization = 0.6,
       min_instances                 = 0,
       max_instances                 = 1
-    }
-  }
+    }]
+  }]
 
   validation {
-    condition     = var.automatic_scaling.max_concurrent_requests >= 10 && var.automatic_scaling.max_concurrent_requests <= 80
+    condition     = ! contains([for max_concurrent_requests in var.automatic_scaling[*].max_concurrent_requests : (max_concurrent_requests >= 10 && max_concurrent_requests <= 80)], false)
     error_message = "The value of max_concurrent_requests must fall within range [10, 80]."
   }
   validation {
-    condition     = var.automatic_scaling.max_idle_instances == "automatic" || ((var.automatic_scaling.max_idle_instances == "automatic" ? 0 : var.automatic_scaling.max_idle_instances) >= 1 && (var.automatic_scaling.max_idle_instances == "automatic" ? 0 : var.automatic_scaling.max_idle_instances) <= 1000)
-    error_message = "The value of max_idle_instances needs to be `automatic` or fall within range [1, 1000]."
+    condition     = ! contains([for max_idle_instances in var.automatic_scaling[*].max_idle_instances : (max_idle_instances >= 1 &&  max_idle_instances <= 1000)], false)
+    error_message = "The value of max_idle_instances needs to fall within range [1, 1000]."
   }
   validation {
-    condition     = var.automatic_scaling.min_idle_instances == "automatic" || ((var.automatic_scaling.min_idle_instances == "automatic" ? 0 : var.automatic_scaling.min_idle_instances) >= 1 && (var.automatic_scaling.min_idle_instances == "automatic" ? 0 : var.automatic_scaling.min_idle_instances) <= 1000)
-    error_message = "The value of min_idle_instances needs to be `automatic` or fall within range [1, 1000]."
+    condition     = ! contains([for min_idle_instances in var.automatic_scaling[*].min_idle_instances : (min_idle_instances >= 1 && min_idle_instances <= 1000)], false)
+    error_message = "The value of min_idle_instances needs to be fall within range [1, 1000]."
   }
   validation {
-    condition     = var.automatic_scaling.standard_scheduler_settings.target_cpu_utilization >= 0.5 && var.automatic_scaling.standard_scheduler_settings.target_cpu_utilization <= 0.95
+    condition     = ! contains([for standard_scheduler_settings in var.automatic_scaling[*].standard_scheduler_settings : contains([for target_cpu_utilization in standard_scheduler_settings[*].target_cpu_utilization : (target_cpu_utilization >= 0.5 && target_cpu_utilization <= 0.95)], false)], true)
     error_message = "The target_cpu_utilization value must fall within range [0.5, 0.95]."
   }
   validation {
-    condition     = var.automatic_scaling.standard_scheduler_settings.target_throughput_utilization >= 0.5 && var.automatic_scaling.standard_scheduler_settings.target_throughput_utilization <= 0.95
+    condition     = ! contains([for standard_scheduler_settings in var.automatic_scaling[*].standard_scheduler_settings : contains([for target_throughput_utilization in standard_scheduler_settings[*].target_throughput_utilization : (target_throughput_utilization >= 0.5 && target_throughput_utilization <= 0.95)], false)], true)
     error_message = "The target_throughput_utilization value must fall within range [0.5, 0.95]."
   }
   validation {
-    condition     = var.automatic_scaling.standard_scheduler_settings.min_instances >= 0 && var.automatic_scaling.standard_scheduler_settings.min_instances <= 1000
+    condition     = ! contains([for standard_scheduler_settings in var.automatic_scaling[*].standard_scheduler_settings : contains([for min_instances in standard_scheduler_settings[*].target_throughput_utilization : (min_instances >= 0 && min_instances <= 1000)], false)], true)
     error_message = "The min_instances value must fall within range [0,1000]."
   }
   validation {
-    condition     = var.automatic_scaling.standard_scheduler_settings.max_instances >= 0 && var.automatic_scaling.standard_scheduler_settings.max_instances <= 2147483647
+    condition     = ! contains([for standard_scheduler_settings in var.automatic_scaling[*].standard_scheduler_settings : contains([for max_instances in standard_scheduler_settings[*].target_throughput_utilization : (max_instances >= 0 && max_instances <= 1000)], false)], true)
     error_message = "The max_instances value must fall within range [0,2147483647]."
   }
 }
