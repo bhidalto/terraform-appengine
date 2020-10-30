@@ -11,11 +11,13 @@ provider "google" {
 }
 
 module "appengine_standard" {
-  source  = "../../modules/standard/"
+  source  = "../../modules/standard/basic_scaling/"
   runtime = var.runtime
-  zip = {
-    source_url  = var.source_url
-    files_count = null
+  deployment {
+        zip {
+            source_url  = var.source_url
+            files_count = null
+        }
   }
   service        = var.service
   instance_class = var.instance_class

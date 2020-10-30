@@ -257,10 +257,7 @@ variable "basic_scaling" {
     idle_timeout  = string,
     max_instances = number
   })
-  default = {
-    idle_timeout  = "300s"
-    max_instances = 1
-  }
+  default = null
 
   validation {
     condition     = var.basic_scaling.max_instances >= 1 && var.basic_scaling.max_instances <= 200
