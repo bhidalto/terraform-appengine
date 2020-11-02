@@ -83,9 +83,6 @@ variable "inbound_services" {
   }
 }
 
-variable "project" {
-
-}
 
 variable "zip" {
   description = "(Optional) Zip File Structure."

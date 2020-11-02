@@ -18,5 +18,4 @@ module "appengine_standard_basic_scaling" {
   instance_class = var.instance_class
   idle_timeout   = var.idle_timeout
   max_instances  = var.max_instances
-  project        = var.project
 }
