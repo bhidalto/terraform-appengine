@@ -1,4 +1,4 @@
-resource "google_app_engine_standard_app_version" "appengine_standard" {
+resource "google_app_engine_standard_app_version" "appengine_standard_basic_scaling" {
   version_id                = var.service_version
   service                   = var.service
   runtime                   = var.runtime
@@ -12,14 +12,14 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   project                   = var.project
   deployment {
     dynamic "zip" {
-      for_each = var.zip == null ? [] : list(var.zip)
+      for_each = var.zip == null ? {} : var.zip
       content {
-        source_url  = zip.value.source_url
-        files_count = zip.value.files_count
+        source_url  = var.zip.source_url
+        files_count = var.zip.files_count
       }
     }
     dynamic "files" {
-      for_each = var.files == null ? [] : list(var.files)
+      for_each = var.files == null ? [] : var.files
       content {
         name       = files.value.name
         sha1_sum   = files.value.sha1_sum

@@ -93,20 +93,16 @@ variable "zip" {
     source_url  = string,
     files_count = number
   })
-  default = {
-    source_url  = null,
-    files_count = null
-  }
+  default = null
 }
 
 variable "files" {
   description = "(Optional) Manifest of the files stored in Google Cloud Storage that are included as part of this version."
-
-  type = object({
+  type = list(object({
     name       = string,
     sha1_sum   = string,
     source_url = string
-  })
+  }))
   default = null
 }
 

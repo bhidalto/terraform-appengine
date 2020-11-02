@@ -4,7 +4,7 @@ variable "service" {}
 variable "instance_class" {}
 
 # Variables for Zip Module
-variable "source_url" {}
+variable "zip" {}
 
 # Variables for Basic Scaling module
 variable "idle_timeout" {}
