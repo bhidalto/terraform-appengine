@@ -12,18 +12,18 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   project                   = var.project
   deployment {
     dynamic "zip" {
-      for_each = var.zip == null ? [] : list(var.zip)
+      for_each = var.zip[*]
       content {
         source_url  = zip.value.source_url
         files_count = zip.value.files_count
       }
     }
     dynamic "files" {
-      for_each = var.files == null ? [] : list(var.files)
+      for_each = var.files == null ? [] : var.files
       content {
-        name       = files.value.name
-        sha1_sum   = files.value.sha1_sum
-        source_url = files.value.source_url
+        name       = var.files[files.key]["name"]
+        sha1_sum   = var.files[files.key]["sha1_sum"]
+        source_url = var.files[files.key]["source_url"]
       }
     }
   }
@@ -63,9 +63,9 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
     }
   }
   dynamic "entrypoint" {
-    for_each = var.entrypoint == null ? {} : var.entrypoint
+    for_each = var.entrypoint[*]
     content {
-      shell = var.entrypoint["shell"]
+      shell = entrypoint.value.shell
     }
   }
   dynamic "automatic_scaling" {
@@ -87,22 +87,10 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
       }
     }
   }
-  dynamic "basic_scaling" {
-    for_each = var.basic_scaling == null ? [] : list(var.basic_scaling)
-    content {
-      idle_timeout  = basic_scaling.value.idle_timeout
-      max_instances = basic_scaling.value.max_instances
-    }
-  }
-  dynamic "manual_scaling" {
-    for_each = var.manual_scaling == null ? [] : list(var.manual_scaling)
-    content {
-      instances = manual_scaling.value.instances
-    }
-  }
+
 
   dynamic "vpc_access_connector" {
-    for_each = var.vpc_access_connector == null ? [] : list(var.vpc_access_connector)
+    for_each = var.vpc_access_connector[*]
     content {
       name = vpc_access_connector.value.name
     }

@@ -9,21 +9,20 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   delete_service_on_destroy = var.delete_service_on_destroy
   inbound_services          = var.inbound_services
   instance_class            = var.instance_class
-  project                   = var.project
   deployment {
     dynamic "zip" {
-      for_each = var.zip == null ? [] : list(var.zip)
+      for_each = var.zip[*]
       content {
         source_url  = zip.value.source_url
         files_count = zip.value.files_count
       }
     }
     dynamic "files" {
-      for_each = var.files == null ? [] : list(var.files)
+      for_each = var.files == null ? [] : var.files
       content {
-        name       = files.value.name
-        sha1_sum   = files.value.sha1_sum
-        source_url = files.value.source_url
+        name       = var.files[files.key]["name"]
+        sha1_sum   = var.files[files.key]["sha1_sum"]
+        source_url = var.files[files.key]["source_url"]
       }
     }
   }
@@ -63,9 +62,9 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
     }
   }
   dynamic "entrypoint" {
-    for_each = var.entrypoint == null ? {} : var.entrypoint
+    for_each = var.entrypoint[*]
     content {
-      shell = var.entrypoint["shell"]
+      shell = entrypoint.value.shell
     }
   }
 
@@ -74,7 +73,7 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   }
 
   dynamic "vpc_access_connector" {
-    for_each = var.vpc_access_connector == null ? [] : list(var.vpc_access_connector)
+    for_each = var.vpc_access_connector[*]
     content {
       name = vpc_access_connector.value.name
     }

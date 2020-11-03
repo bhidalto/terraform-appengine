@@ -83,30 +83,22 @@ variable "inbound_services" {
   }
 }
 
-variable "project" {
-
-}
-
 variable "zip" {
   description = "(Optional) Zip File Structure."
   type = object({
     source_url  = string,
     files_count = number
   })
-  default = {
-    source_url  = null,
-    files_count = null
-  }
+  default = null
 }
 
 variable "files" {
   description = "(Optional) Manifest of the files stored in Google Cloud Storage that are included as part of this version."
-
-  type = object({
+  type = list(object({
     name       = string,
     sha1_sum   = string,
     source_url = string
-  })
+  }))
   default = null
 }
 
@@ -176,10 +168,7 @@ variable "libraries" {
     name    = string,
     version = string
   }))
-  default = [{
-    name    = null,
-    version = "latest"
-  }]
+  default = null
 }
 
 variable "entrypoint" {
@@ -187,9 +176,7 @@ variable "entrypoint" {
   type = object({
     shell = string
   })
-  default = {
-    shell = null
-  }
+  default = null
 }
 
 variable "manual_scaling" {
@@ -212,9 +199,7 @@ variable "vpc_access_connector" {
   type = object({
     name = string
   })
-  default = {
-    name = null
-  }
+  default = null
 
   validation {
     condition     = var.vpc_access_connector.name == null || length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", (var.vpc_access_connector.name == null ? "" : var.vpc_access_connector.name))) > 0

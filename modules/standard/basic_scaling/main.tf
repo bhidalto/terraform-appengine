@@ -62,9 +62,9 @@ resource "google_app_engine_standard_app_version" "appengine_standard_basic_scal
     }
   }
   dynamic "entrypoint" {
-    for_each = var.entrypoint == null ? {} : var.entrypoint
+    for_each = var.entrypoint[*]
     content {
-      shell = var.entrypoint["shell"]
+      shell = entrypoint.value.shell
     }
   }
 
@@ -74,7 +74,7 @@ resource "google_app_engine_standard_app_version" "appengine_standard_basic_scal
   }
 
   dynamic "vpc_access_connector" {
-    for_each = var.vpc_access_connector == null ? [] : list(var.vpc_access_connector)
+    for_each = var.vpc_access_connector[*]
     content {
       name = vpc_access_connector.value.name
     }
