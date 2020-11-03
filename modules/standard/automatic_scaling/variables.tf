@@ -83,30 +83,22 @@ variable "inbound_services" {
   }
 }
 
-variable "project" {
-
-}
-
 variable "zip" {
   description = "(Optional) Zip File Structure."
   type = object({
     source_url  = string,
     files_count = number
   })
-  default = {
-    source_url  = null,
-    files_count = null
-  }
+  default = null
 }
 
 variable "files" {
   description = "(Optional) Manifest of the files stored in Google Cloud Storage that are included as part of this version."
-
-  type = object({
+  type = list(object({
     name       = string,
     sha1_sum   = string,
     source_url = string
-  })
+  }))
   default = null
 }
 
@@ -194,39 +186,39 @@ variable "entrypoint" {
 
 variable "automatic_scaling" {
   description = "(Optional) Automatic scaling is based on request rate, response latencies, and other application metrics."
-  type = list(object({
+  type = object({
     max_concurrent_requests = number,
     max_idle_instances      = number,
     max_pending_latency     = string,
     min_idle_instances      = number,
     min_pending_latency     = string
-    standard_scheduler_settings = list(object({
-        target_cpu_utilization        = number,
-        target_throughput_utilization = number,
-        min_instances                 = number,
-        max_instances                 = number
-        }))
-  }))
-  default = [{
+    standard_scheduler_settings = object({
+      target_cpu_utilization        = number,
+      target_throughput_utilization = number,
+      min_instances                 = number,
+      max_instances                 = number
+    })
+  })
+  default = {
     max_concurrent_requests = 10,
     max_idle_instances      = 10,
     max_pending_latency     = "30ms",
     min_idle_instances      = 3,
     min_pending_latency     = "0s",
-    standard_scheduler_settings = [{
+    standard_scheduler_settings = {
       target_cpu_utilization        = 0.6,
       target_throughput_utilization = 0.6,
       min_instances                 = 0,
       max_instances                 = 1
-    }]
-  }]
+    }
+  }
 
   validation {
     condition     = ! contains([for max_concurrent_requests in var.automatic_scaling[*].max_concurrent_requests : (max_concurrent_requests >= 10 && max_concurrent_requests <= 80)], false)
     error_message = "The value of max_concurrent_requests must fall within range [10, 80]."
   }
   validation {
-    condition     = ! contains([for max_idle_instances in var.automatic_scaling[*].max_idle_instances : (max_idle_instances >= 1 &&  max_idle_instances <= 1000)], false)
+    condition     = ! contains([for max_idle_instances in var.automatic_scaling[*].max_idle_instances : (max_idle_instances >= 1 && max_idle_instances <= 1000)], false)
     error_message = "The value of max_idle_instances needs to fall within range [1, 1000]."
   }
   validation {
@@ -251,43 +243,12 @@ variable "automatic_scaling" {
   }
 }
 
-variable "basic_scaling" {
-  description = "(Optional) Basic scaling creates instances when your application receives requests. Each instance will be shut down when the application becomes idle. Basic scaling is ideal for work that is intermittent or driven by user activity."
-  type = object({
-    idle_timeout  = string,
-    max_instances = number
-  })
-  default = null
-
-  validation {
-    condition     = var.basic_scaling.max_instances >= 1 && var.basic_scaling.max_instances <= 200
-    error_message = "The number of max instances needs to be in the range [1,200]."
-  }
-}
-
-variable "manual_scaling" {
-  description = "(Optional) A service with manual scaling runs continuously, allowing you to perform complex initialization and rely on the state of its memory over time."
-  type = object({
-    instances = number
-  })
-  default = {
-    instances = 1
-  }
-
-  validation {
-    condition     = var.manual_scaling.instances > 0
-    error_message = "You must allocate at least 1 instance."
-  }
-}
-
 variable "vpc_access_connector" {
   description = "(Optional) Enables VPC connectivity for standard apps."
   type = object({
     name = string
   })
-  default = {
-      name = null
-  }
+  default = null
 
   validation {
     condition     = var.vpc_access_connector.name == null || length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", (var.vpc_access_connector.name == null ? "" : var.vpc_access_connector.name))) > 0

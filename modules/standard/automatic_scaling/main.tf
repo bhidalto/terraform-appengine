@@ -9,7 +9,6 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   delete_service_on_destroy = var.delete_service_on_destroy
   inbound_services          = var.inbound_services
   instance_class            = var.instance_class
-  project                   = var.project
   deployment {
     dynamic "zip" {
       for_each = var.zip[*]
@@ -68,16 +67,17 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
       shell = entrypoint.value.shell
     }
   }
+
   dynamic "automatic_scaling" {
-    for_each = var.automatic_scaling == null ? [] : var.automatic_scaling
+    for_each = var.automatic_scaling[*]
     content {
-      max_concurrent_requests = var.automatic_scaling[automatic_scaling.key]["max_concurrent_requests"]
-      max_idle_instances      = var.automatic_scaling[automatic_scaling.key]["max_idle_instances"]
-      max_pending_latency     = var.automatic_scaling[automatic_scaling.key]["max_pending_latency"]
-      min_idle_instances      = var.automatic_scaling[automatic_scaling.key]["min_idle_instances"]
-      min_pending_latency     = var.automatic_scaling[automatic_scaling.key]["min_pending_latency"]
+      max_concurrent_requests = automatic_scaling.value.max_concurrent_requests
+      max_idle_instances      = automatic_scaling.value.max_idle_instances
+      max_pending_latency     = automatic_scaling.value.max_pending_latency
+      min_idle_instances      = automatic_scaling.value.min_idle_instances
+      min_pending_latency     = automatic_scaling.value.min_pending_latency
       dynamic "standard_scheduler_settings" {
-        for_each = automatic_scaling.value.standard_scheduler_settings == null ? [] : automatic_scaling.value.standard_scheduler_settings
+        for_each = automatic_scaling.value.standard_scheduler_settings[*]
         content {
           target_cpu_utilization        = standard_scheduler_settings.value.target_cpu_utilization
           target_throughput_utilization = standard_scheduler_settings.value.target_throughput_utilization
