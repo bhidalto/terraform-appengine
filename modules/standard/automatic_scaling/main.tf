@@ -69,6 +69,9 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   }
 
   dynamic "automatic_scaling" {
+    # The [*] here will test if the variable value is set. If so, it'll
+    # produce a single-element list. If not (if it's null), it'll produce
+    # an empty list.
     for_each = var.automatic_scaling[*]
     content {
       max_concurrent_requests = automatic_scaling.value.max_concurrent_requests

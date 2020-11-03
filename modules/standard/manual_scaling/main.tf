@@ -69,7 +69,7 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   }
 
   manual_scaling {
-    instances = var.manual_scaling.instances
+    instances = var.instances
   }
 
   dynamic "vpc_access_connector" {

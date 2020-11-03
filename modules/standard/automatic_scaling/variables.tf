@@ -248,7 +248,9 @@ variable "vpc_access_connector" {
   type = object({
     name = string
   })
-  default = null
+  default = {
+      name = null
+  }
 
   validation {
     condition     = var.vpc_access_connector.name == null || length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", (var.vpc_access_connector.name == null ? "" : var.vpc_access_connector.name))) > 0

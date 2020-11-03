@@ -179,17 +179,13 @@ variable "entrypoint" {
   default = null
 }
 
-variable "manual_scaling" {
+variable "instances" {
   description = "(Optional) A service with manual scaling runs continuously, allowing you to perform complex initialization and rely on the state of its memory over time."
-  type = object({
-    instances = number
-  })
-  default = {
-    instances = 1
-  }
+  type = number
+  default = 1
 
   validation {
-    condition     = var.manual_scaling.instances > 0
+    condition     = var.instances > 0
     error_message = "You must allocate at least 1 instance."
   }
 }
@@ -199,7 +195,9 @@ variable "vpc_access_connector" {
   type = object({
     name = string
   })
-  default = null
+  default = {
+      name = null
+  }
 
   validation {
     condition     = var.vpc_access_connector.name == null || length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", (var.vpc_access_connector.name == null ? "" : var.vpc_access_connector.name))) > 0

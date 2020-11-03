@@ -38,15 +38,15 @@ variable "threadsafe" {
 }
 
 variable "api_version" {
-  description = "(Optional; Default: 1)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
+  description = "(Optional)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
   type        = number
-  default     = 1
+  default     = null
 }
 
 variable "env_variables" {
   description = "(Optional) Environment variables to be passed to the App Engine service"
   type        = map(any)
-  default     = {}
+  default     = null
 }
 
 variable "noop_on_destroy" {
@@ -199,7 +199,9 @@ variable "vpc_access_connector" {
   type = object({
     name = string
   })
-  default = null
+  default = {
+      name = null
+  }
 
   validation {
     condition     = var.vpc_access_connector.name == null || length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", (var.vpc_access_connector.name == null ? "" : var.vpc_access_connector.name))) > 0
