@@ -11,6 +11,9 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
   instance_class            = var.instance_class
   deployment {
     dynamic "zip" {
+    # The [*] here will test if the variable value is set. If so, it'll
+    # produce a single-element list. If not (if it's null), it'll produce
+    # an empty list.
       for_each = var.zip[*]
       content {
         source_url  = zip.value.source_url
@@ -62,6 +65,9 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
     }
   }
   dynamic "entrypoint" {
+    # The [*] here will test if the variable value is set. If so, it'll
+    # produce a single-element list. If not (if it's null), it'll produce
+    # an empty list.
     for_each = var.entrypoint[*]
     content {
       shell = entrypoint.value.shell
@@ -90,7 +96,6 @@ resource "google_app_engine_standard_app_version" "appengine_standard" {
       }
     }
   }
-
 
   dynamic "vpc_access_connector" {
     for_each = var.vpc_access_connector[*]

@@ -12,9 +12,12 @@ provider "google" {
 
 module "appengine_standard_automatic_scaling" {
   source            = "../../modules/standard/automatic_scaling/"
-  runtime           = var.runtime
-  zip               = var.zip
+  service_version   = var.service_version
   service           = var.service
+  runtime           = var.runtime
+  threadsafe        = var.threadsafe
   instance_class    = var.instance_class
+  zip               = var.zip
+  handlers          = var.handlers
   automatic_scaling = var.automatic_scaling
 }
