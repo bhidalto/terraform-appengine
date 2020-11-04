@@ -11,10 +11,21 @@ provider "google" {
 }
 
 module "appengine_standard_manual_scaling" {
-  source         = "../../modules/standard/manual_scaling/"
-  runtime        = var.runtime
-  zip            = var.zip
-  service        = var.service
-  instance_class = var.instance_class
-  instances      = var.instances
+  source                    = "../../modules/standard/manual_scaling/"
+  service_version           = var.service_version
+  service                   = var.service
+  runtime                   = var.runtime
+  threadsafe                = var.threadsafe
+  api_version               = var.api_version
+  env_variables             = var.env_variables
+  noop_on_destroy           = var.noop_on_destroy
+  delete_service_on_destroy = var.delete_service_on_destroy
+  inbound_services          = var.inbound_services
+  instance_class            = var.instance_class
+  zip                       = var.zip
+  handlers                  = var.handlers
+  libraries                 = var.libraries
+  entrypoint                = var.entrypoint
+  instances                 = var.instances
+  vpc_access_connector      = var.vpc_access_connector
 }
