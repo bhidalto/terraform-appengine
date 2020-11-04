@@ -18,25 +18,16 @@ zip = {
 
 # Variables for Handlers block
 handlers = [{
-  url_regex                   = "/.*",
-  security_level              = "SECURE_DEFAULT",
-  login                       = "LOGIN_OPTIONAL",
-  auth_fail_action            = "AUTH_FAIL_ACTION_REDIRECT",
-  redirect_http_response_code = "REDIRECT_HTTP_RESPONSE_CODE_301",
+  url_regex = "/.*",
+  security_level              = null,
+  login                       = null,
+  auth_fail_action            = null,
+  redirect_http_response_code = null,
   script = {
     script_path = "main.app"
   }
   static_files = null
 }]
-
-# Variables for Libraries block
-libraries = null
-
-# Variables for Entrypoint block
-entrypoint = null
-
-# Variables for VPC Access Connector block
-vpc_access_connector = null
 
 # Variables for Manual Scaling block
 instances = 5

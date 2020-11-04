@@ -16,17 +16,7 @@ variable "zip" {}
 # Variables for Handlers block
 variable "handlers" {}
 
-# Variables for Libraries block
-variable "libraries" {}
-
-# Variables for Entrypoint block
-variable "entrypoint" {}
-
-# Variables for VPC Access Connector block
-variable "vpc_access_connector" {}
-
 # Variables for Manual Scaling bloc
 variable "instances" {}
-
 
 variable "project" {}

@@ -24,8 +24,5 @@ module "appengine_standard_manual_scaling" {
   instance_class            = var.instance_class
   zip                       = var.zip
   handlers                  = var.handlers
-  libraries                 = var.libraries
-  entrypoint                = var.entrypoint
   instances                 = var.instances
-  vpc_access_connector      = var.vpc_access_connector
 }
