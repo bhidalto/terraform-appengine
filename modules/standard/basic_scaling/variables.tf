@@ -38,15 +38,15 @@ variable "threadsafe" {
 }
 
 variable "api_version" {
-  description = "(Optional)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
+  description = "(Optional; Default: 1)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
   type        = number
-  default     = null
+  default     = 1
 }
 
 variable "env_variables" {
   description = "(Optional) Environment variables to be passed to the App Engine service"
   type        = map(any)
-  default     = null
+  default     = {}
 }
 
 variable "noop_on_destroy" {
@@ -82,7 +82,6 @@ variable "inbound_services" {
     error_message = "Inbound services must be a list with any of the following values [INBOUND_SERVICE_MAIL, INBOUND_SERVICE_MAIL_BOUNCE, INBOUND_SERVICE_XMPP_ERROR, INBOUND_SERVICE_XMPP_MESSAGE, INBOUND_SERVICE_XMPP_SUBSCRIBE, INBOUND_SERVICE_XMPP_PRESENCE, INBOUND_SERVICE_CHANNEL_PRESENCE, INBOUND_SERVICE_WARMUP]."
   }
 }
-
 
 variable "zip" {
   description = "(Optional) Zip File Structure."
@@ -126,41 +125,22 @@ variable "handlers" {
   }))
 
   validation {
-    condition     = ! contains([for security_level in var.handlers[*].security_level : (security_level == null || contains(["SECURE_DEFAULT", "SECURE_NEVER", "SECURE_OPTIONAL", "SECURE_ALWAYS"], (security_level == null ? "" : security_level)))], false)
+    condition     = var.handlers != null ? ! contains([for security_level in var.handlers[*].security_level : (security_level == null || contains(["SECURE_DEFAULT", "SECURE_NEVER", "SECURE_OPTIONAL", "SECURE_ALWAYS"], security_level)) if security_level != null], false) : true
     error_message = "Security level field value must be one of [SECURE_DEFAULT, SECURE_NEVER, SECURE_OPTIONAL, SECURE_ALWAYS]."
   }
   validation {
-    condition     = ! contains([for login in var.handlers[*].login : (login == null || contains(["LOGIN_OPTIONAL", "LOGIN_ADMIN", "LOGIN_REQUIRED"], (login == null ? "" : login)))], false)
+    condition     = var.handlers != null ? ! contains([for login in var.handlers[*].login : (login == null || contains(["LOGIN_OPTIONAL", "LOGIN_ADMIN", "LOGIN_REQUIRED"], login)) if login != null], false) : true
     error_message = "Login field value must be one of [LOGIN_OPTIONAL, LOGIN_ADMIN, LOGIN_REQUIRED]."
   }
   validation {
-    condition     = ! contains([for auth_fail_action in var.handlers[*].auth_fail_action : (auth_fail_action == null || contains(["AUTH_FAIL_ACTION_REDIRECT", "AUTH_FAIL_ACTION_UNAUTHORIZED"], (auth_fail_action == null ? "" : auth_fail_action)))], false)
+    condition     = var.handlers != null ? ! contains([for auth_fail_action in var.handlers[*].auth_fail_action : (auth_fail_action == null || contains(["AUTH_FAIL_ACTION_REDIRECT", "AUTH_FAIL_ACTION_UNAUTHORIZED"], auth_fail_action)) if auth_fail_action != null], false) : true
     error_message = "Auth fail action field value must be one of [AUTH_FAIL_ACTION_REDIRECT,AUTH_FAIL_ACTION_UNAUTHORIZED]."
   }
   validation {
-    condition     = ! contains([for redirect_http_response_code in var.handlers[*].redirect_http_response_code : (redirect_http_response_code == null || contains(["REDIRECT_HTTP_RESPONSE_CODE_301", "REDIRECT_HTTP_RESPONSE_CODE_302", "REDIRECT_HTTP_RESPONSE_CODE_303", "REDIRECT_HTTP_RESPONSE_CODE_307"], (redirect_http_response_code == null ? "" : redirect_http_response_code)))], false)
+    condition     = var.handlers != null ? ! contains([for redirect_http_response_code in var.handlers[*].redirect_http_response_code : (redirect_http_response_code == null || contains(["REDIRECT_HTTP_RESPONSE_CODE_301", "REDIRECT_HTTP_RESPONSE_CODE_302", "REDIRECT_HTTP_RESPONSE_CODE_303", "REDIRECT_HTTP_RESPONSE_CODE_307"], redirect_http_response_code)) if redirect_http_response_code != null], false) : true
     error_message = "Redirect HTTP response code field value must be one of [REDIRECT_HTTP_RESPONSE_CODE_301, REDIRECT_HTTP_RESPONSE_CODE_302, REDIRECT_HTTP_RESPONSE_CODE_303, REDIRECT_HTTP_RESPONSE_CODE_307]."
   }
-  default = [{
-    url_regex                   = null,
-    security_level              = "SECURE_DEFAULT",
-    login                       = "LOGIN_OPTIONAL",
-    auth_fail_action            = "AUTH_FAIL_ACTION_REDIRECT",
-    redirect_http_response_code = "REDIRECT_HTTP_RESPONSE_CODE_301",
-    script = {
-      script_path = null
-    }
-    static_files = {
-      path                  = null,
-      upload_path_regex     = null,
-      http_headers          = null,
-      mime_type             = null,
-      expiration            = "600s",
-      require_matching_file = false,
-      application_readable  = false
-    }
-  }]
-
+  default = null
 }
 
 variable "libraries" {
@@ -199,12 +179,10 @@ variable "vpc_access_connector" {
   type = object({
     name = string
   })
-  default = {
-      name = null
-  }
+  default = null
 
   validation {
-    condition     = var.vpc_access_connector.name == null || length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", (var.vpc_access_connector.name == null ? "" : var.vpc_access_connector.name))) > 0
+    condition     = var.vpc_access_connector != null ? length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", (var.vpc_access_connector.name == null ? "" : var.vpc_access_connector.name))) > 0 : true
     error_message = "Format of VPC access connector must use the following format `projects/[$PROJECT_NAME]/locations/[$CONNECTOR_LOCATION]/connectors/[$CONNECTOR_NAME]`."
   }
 }

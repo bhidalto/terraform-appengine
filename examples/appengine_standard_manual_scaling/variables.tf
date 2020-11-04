@@ -1,4 +1,5 @@
 # Variables for Standard Module
+variable "service_version" {}
 variable "service" {}
 variable "runtime" {}
 variable "threadsafe" {}

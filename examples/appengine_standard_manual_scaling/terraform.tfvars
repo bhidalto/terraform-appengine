@@ -1,8 +1,9 @@
 # Variables for Standard Module
-service                   = "terraform-py27"
-runtime                   = "python27"
-threadsafe                = true
-instance_class            = "B1"
+service_version = "py1234"
+service         = "terraform-py27"
+runtime         = "python27"
+threadsafe      = true
+instance_class  = "B1"
 
 # Variables for Zip block
 zip = {
@@ -12,7 +13,7 @@ zip = {
 
 # Variables for Handlers block
 handlers = [{
-  url_regex = "/.*",
+  url_regex                   = "/.*",
   security_level              = null,
   login                       = null,
   auth_fail_action            = null,
