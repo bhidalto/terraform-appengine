@@ -1,13 +1,7 @@
 # Variables for Standard Module
-service_version           = "1234"
 service                   = "terraform-py27"
 runtime                   = "python27"
 threadsafe                = true
-api_version               = 1
-env_variables             = null
-noop_on_destroy           = true
-delete_service_on_destroy = false
-inbound_services          = null
 instance_class            = "B1"
 
 # Variables for Zip block
