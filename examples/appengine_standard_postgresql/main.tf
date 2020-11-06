@@ -63,6 +63,15 @@ module "cloud_sql_user" {
   sql_user_password = var.sql_user_password
 }
 
+# ==== Cloud SQL Database ==== #
+
+module "cloud_sql_database" {
+  depends_on    = [module.private_postgres_instance]
+  source        = "git::https://github.com/crodriguezconde/terraform-google-cloud-sql.git//modules/cloud_sql_database?ref=v0.0.2"
+  database_name = var.database_name
+  instance_name = module.private_postgres_instance.name
+}
+
 # ==== Serverless VPC connector ==== #
 
 module "svpc_connector" {
@@ -85,10 +94,10 @@ module "appengine_standard_automatic_scaling" {
   service           = var.service
   runtime           = var.runtime
   threadsafe        = var.threadsafe
-  env_variables     = { CLOUDSQL_CONNECTION_NAME : module.private_postgres_instance.connection_name, DB_USER : var.sql_user_name, DB_PASS : var.sql_user_password, DB_NAME : "postgres" }
+  env_variables     = { CLOUD_SQL_CONNECTION_NAME : module.private_postgres_instance.connection_name, DB_USER : var.sql_user_name, DB_PASS : var.sql_user_password, DB_NAME : var.database_name }
   instance_class    = var.instance_class
   zip               = var.zip
-  handlers          = var.handlers
+  entrypoint        = var.entrypoint
   automatic_scaling = var.automatic_scaling
   vpc_access_connector = {
     name = module.svpc_connector.id

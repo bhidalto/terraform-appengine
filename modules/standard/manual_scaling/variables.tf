@@ -38,9 +38,9 @@ variable "threadsafe" {
 }
 
 variable "api_version" {
-  description = "(Optional; Default: 1)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
+  description = "(Optional)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
   type        = number
-  default     = 1
+  default     = null
 }
 
 variable "env_variables" {

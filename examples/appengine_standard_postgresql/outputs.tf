@@ -19,6 +19,18 @@ output "postgres_name" {
   value       = module.private_postgres_instance.name
 }
 
+#Outputs for Cloud SQL Postgres Database
+
+output "cloudsql_db_id" {
+  description = "An identifier for the resource with format projects/{{project}}/instances/{{instance}}/databases/{{name}}"
+  value       = module.cloud_sql_database.id
+}
+
+output "cloudsql_db_self_link" {
+  description = "The URI of the created resource."
+  value       = module.cloud_sql_database.self_link
+}
+
 
 # Outputs for SVPC connector module
 output "svpc_connector_id" {

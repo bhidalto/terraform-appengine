@@ -16,6 +16,9 @@ variable "postgres_version" {}
 variable "sql_user_name" {}
 variable "sql_user_password" {}
 
+## Variables declaration for Cloud SQL Database
+variable "database_name" {}
+
 # Variables for SVPC connector block
 variable "svpc_connector_name" {}
 variable "ip_cidr_range" {}
@@ -34,8 +37,8 @@ variable "instance_class" {}
 # Variables for Zip Module
 variable "zip" {}
 
-# Variables for Handlers block
-variable "handlers" {}
+# Variables for Entrypoint block
+variable "entrypoint" {}
 
 # Variables for Automatic Scaling module
 variable "automatic_scaling" {}
