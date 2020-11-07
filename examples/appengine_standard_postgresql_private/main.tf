@@ -88,7 +88,7 @@ module "svpc_connector" {
 # ==== App Engine Standard Automatic Scaling ==== #
 
 module "appengine_standard_automatic_scaling" {
-  depends_on        = [module.private_postgres_instance, module.svpc_connector]
+  depends_on        = [module.private_postgres_instance, module.svpc_connector, module.cloud_sql_database]
   source            = "../../modules/standard/automatic_scaling/"
   service_version   = var.service_version
   service           = var.service
