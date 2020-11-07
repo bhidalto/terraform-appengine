@@ -9,12 +9,12 @@ output "name" {
 }
 
 output "app_id" {
-  description = " Identifier of the app, usually {PROJECT_ID}."
+  description = "Identifier of the app, usually {PROJECT_ID}."
   value       = google_app_engine_application.appengine_app.app_id
 }
 
 output "url_dispatch_rule" {
-  description = " A list of dispatch rule blocks. Each block has a domain, path, and service field."
+  description = "A list of dispatch rule blocks. Each block has a domain, path, and service field."
   value       = google_app_engine_application.appengine_app.url_dispatch_rule
 }
 
@@ -39,12 +39,12 @@ output "gcr_domain" {
 }
 
 output "iap" {
-  description = "Settings for enabling Cloud Identity Aware Proxy"
+  description = "Settings for enabling Cloud Identity Aware Proxy."
   value       = google_app_engine_application.appengine_app.iap
 }
 
 output "iap_enabled" {
-  description = "Optional) Whether the serving infrastructure will authenticate and authorize all incoming requests. (default is false)"
+  description = "(Optional) Whether the serving infrastructure will authenticate and authorize all incoming requests. (default is false)"
   value       = google_app_engine_application.appengine_app.iap[0]
 }
 
