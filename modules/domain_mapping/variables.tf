@@ -20,7 +20,7 @@ variable "ssl_settings" {
 }
 
 variable "override_strategy" {
-  description = "(Required) Relative name of the domain serving the application."
+  description = "(Optional) Whether the domain creation should override any existing mappings for this domain. By default, overrides are rejected. Possible values are STRICT and OVERRIDE."
   type        = string
   default     = null
 
