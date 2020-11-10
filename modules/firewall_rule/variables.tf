@@ -32,7 +32,7 @@ variable "priority" {
   default     = null
 
   validation {
-    condition     = (priority == null ? 1 : var.priority) > 0
-    error_message = "Prirority must be an integer number."
+    condition     = (var.priority == null ? 1 : var.priority) > 0
+    error_message = "Prirority must be an integer number bigger than 1."
   }
 }
