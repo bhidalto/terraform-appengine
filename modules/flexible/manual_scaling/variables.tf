@@ -9,50 +9,93 @@ variable "runtime" {
     error_message = "The specified runtime does not match any of the supported runtimes: \n - Python: python27, python37, python38 \n - Java: java8, java11 \n - PHP: php55, php73, php74 \n - Ruby: ruby25 \n - Go: go111, go112, go113, go114 \n - Node.js: nodejs10, nodejs12."
   }
 }
-
-variable "readiness_check" {
-  description = "(Required) Configures readiness health checking for instances. Unhealthy instances are not put into the backend traffic rotation."
-  type = object({
-    path              = string,
-    host              = string,
-    failure_threshold = number,
-    success_threshold = number,
-    check_interval    = string,
-    timeout           = string,
-    app_start_timeout = string
-  })
-  default = {
-    path              = "/readiness",
-    host              = null,
-    failure_threshold = 2,
-    success_threshold = 2,
-    check_interval    = "5s",
-    timeout           = "4s",
-    app_start_timeout = "300s"
-  }
+# ===== Readiness Check Variables ===== #
+variable "readiness_path" {
+  description = "(Required) The request path."
+  type        = string
+  default     = "/readiness"
 }
 
-variable "liveness_check" {
-  description = "(Required) Health checking configuration for VM instances. Unhealthy instances are killed and replaced with new instances."
-  type = object({
-    path              = string,
-    host              = string,
-    failure_threshold = number,
-    success_threshold = number,
-    check_interval    = string,
-    timeout           = string,
-    app_start_timeout = string
-  })
-  default = {
-    path              = "/liveness",
-    host              = null,
-    failure_threshold = 2,
-    success_threshold = 2,
-    check_interval    = "5s",
-    timeout           = "4s",
-    app_start_timeout = "300s"
-  }
+variable "readiness_host" {
+  description = "(Optional) Host header to send when performing a HTTP Readiness check."
+  type        = string
+  default     = null
 }
+
+variable "readiness_failure_threshold" {
+  description = "(Optional) Number of consecutive failed checks required before removing traffic."
+  type        = number
+  default     = 2
+}
+
+variable "readiness_success_threshold" {
+  description = "(Optional) Number of consecutive successful checks required before receiving traffic."
+  type        = number
+  default     = 2
+}
+
+variable "readiness_check_interval" {
+  description = "(Optional) Interval between health checks."
+  type        = string
+  default     = "5s"
+}
+
+variable "readiness_timeout" {
+  description = "(Optional) Time before the check is considered failed."
+  type        = string
+  default     = "4s"
+}
+
+variable "readiness_app_start_timeout" {
+  description = "(Optional) A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic."
+  type        = string
+  default     = "300s"
+}
+# ===== /Readiness Check Variables ===== #
+
+# ===== Liveness Check Variables ===== #
+variable "liveness_path" {
+  description = "(Required) The request path."
+  type        = string
+  default     = "/liveness"
+}
+
+variable "liveness_host" {
+  description = "(Optional) Host header to send when performing a HTTP Readiness check."
+  type        = string
+  default     = null
+}
+
+variable "liveness_failure_threshold" {
+  description = "(Optional) Number of consecutive failed checks required before removing traffic."
+  type        = number
+  default     = 4
+}
+
+variable "liveness_success_threshold" {
+  description = "(Optional) Number of consecutive successful checks required before receiving traffic."
+  type        = number
+  default     = 2
+}
+
+variable "liveness_check_interval" {
+  description = "(Optional) Interval between health checks."
+  type        = string
+  default     = "5s"
+}
+
+variable "liveness_timeout" {
+  description = "(Optional) Time before the check is considered failed."
+  type        = string
+  default     = "4s"
+}
+
+variable "liveness_initial_delay" {
+  description = "(Optional) A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic."
+  type        = string
+  default     = "300s"
+}
+# ===== /Liveness Check Variables ===== #
 
 variable "service" {
   description = "(Required; Default: default) Name of the App Engine Service"
@@ -295,13 +338,18 @@ variable "container" {
   default = null
 
   validation {
-    condition     = var.container != null ? ! contains([for image in var.container[*].image : (image == null || length(regexall("", security_level)) > 0) if image != null], false) : true
+    condition     = var.container != null ? ! contains([for image in var.container[*].image : (image == null || length(regexall("^(eu|us|asia)?gcr.io/[[:word:]-]+/[[:word:]-]+(:[[:word:]-]+|@[[:alnum:]]+)$", image)) > 0) if image != null], false) : true
     error_message = "Security level field value must be one of [SECURE_DEFAULT, SECURE_NEVER, SECURE_OPTIONAL, SECURE_ALWAYS]."
   }
 }
 
 variable "cloud_build_options" {
   description = "(Optional) Options for the build operations performed as a part of the version deployment. Only applicable when creating a version using source code directly."
+  type = list(object({
+    app_yaml_path       = string
+    cloud_build_timeout = string
+  }))
+  default = null
 }
 # ===== /Deployment Variables ===== #
 
@@ -316,7 +364,7 @@ variable "endpoints_api_service" {
   default = null
 
   validation {
-    condition     = var.endpoints_api_service != null ? ! contains([for rollout_strategy in var.endpoints_api_service[*].rollout_strategy : (rollout_strategy == null || contains(["FIXED", "MANAGED"], security_level)) if rollout_strategy != null], false) : true
+    condition     = var.endpoints_api_service != null ? ! contains([for rollout_strategy in var.endpoints_api_service[*].rollout_strategy : (rollout_strategy == null || contains(["FIXED", "MANAGED"], rollout_strategy)) if rollout_strategy != null], false) : true
     error_message = "Rollout strategy field value must be one of [FIXED, MANAGED]."
   }
 }
@@ -331,7 +379,7 @@ variable "entrypoint" {
 
 # ===== Manual Scaling Variables ===== #
 variable "instances" {
-  description = "(Optional) A service with manual scaling runs continuously, allowing you to perform complex initialization and rely on the state of its memory over time."
+  description = "(Required; Default 1) Number of instances to assign to the service at the start. "
   type        = number
   default     = 1
 

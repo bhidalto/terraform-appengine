@@ -1,10 +1,26 @@
-resource "google_app_engine_flexible_app_version" "appengine_flexible" {
+resource "google_app_engine_flexible_app_version" "appengine_flexible_manual_scaling" {
   # ===== Required Variables ===== #
 
-  runtime         = var.runtime
-  readiness_check = var.readiness_check
-  liveness_check  = var.liveness_check
-  service         = var.service
+  runtime = var.runtime
+  readiness_check {
+    path              = var.readiness_path
+    host              = var.readiness_host
+    failure_threshold = var.readiness_failure_threshold
+    success_threshold = var.readiness_success_threshold
+    check_interval    = var.readiness_check_interval
+    timeout           = var.readiness_timeout
+    app_start_timeout = var.readiness_app_start_timeout
+  }
+  liveness_check {
+    path              = var.liveness_path
+    host              = var.liveness_host
+    failure_threshold = var.liveness_failure_threshold
+    success_threshold = var.liveness_success_threshold
+    check_interval    = var.liveness_check_interval
+    timeout           = var.liveness_timeout
+    initial_delay     = var.liveness_initial_delay
+  }
+  service = var.service
 
   # ===== Optional Variables ===== #
 
@@ -106,7 +122,11 @@ resource "google_app_engine_flexible_app_version" "appengine_flexible" {
       }
     }
     dynamic "cloud_build_options" {
-
+      for_each = var.cloud_build_options == null ? [] : list(var.cloud_build_options)
+      content {
+        app_yaml_path       = var.cloud_build_options[cloud_build_options.key]["app_yaml_path"]
+        cloud_build_timeout = var.cloud_build_options[cloud_build_options.key]["cloud_build_timeout"]
+      }
     }
   }
   dynamic "endpoints_api_service" {
