@@ -11,7 +11,7 @@ variable "runtime" {
 }
 # ===== Readiness Check Variables ===== #
 variable "readiness_path" {
-  description = "(Required) The request path."
+  description = "(Required; Default "/readiness") The request path."
   type        = string
   default     = "/readiness"
 }
@@ -23,31 +23,31 @@ variable "readiness_host" {
 }
 
 variable "readiness_failure_threshold" {
-  description = "(Optional) Number of consecutive failed checks required before removing traffic."
+  description = "(Optional; Default 2) Number of consecutive failed checks required before removing traffic."
   type        = number
   default     = 2
 }
 
 variable "readiness_success_threshold" {
-  description = "(Optional) Number of consecutive successful checks required before receiving traffic."
+  description = "(Optional; Default 2) Number of consecutive successful checks required before receiving traffic."
   type        = number
   default     = 2
 }
 
 variable "readiness_check_interval" {
-  description = "(Optional) Interval between health checks."
+  description = "(Optional; Default "5s") Interval between health checks."
   type        = string
   default     = "5s"
 }
 
 variable "readiness_timeout" {
-  description = "(Optional) Time before the check is considered failed."
+  description = "(Optional; Default "4s") Time before the check is considered failed."
   type        = string
   default     = "4s"
 }
 
 variable "readiness_app_start_timeout" {
-  description = "(Optional) A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic."
+  description = "(Optional; Default "300s") A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic."
   type        = string
   default     = "300s"
 }
@@ -55,7 +55,7 @@ variable "readiness_app_start_timeout" {
 
 # ===== Liveness Check Variables ===== #
 variable "liveness_path" {
-  description = "(Required) The request path."
+  description = "(Required; Default "/liveness") The request path."
   type        = string
   default     = "/liveness"
 }
@@ -67,31 +67,31 @@ variable "liveness_host" {
 }
 
 variable "liveness_failure_threshold" {
-  description = "(Optional) Number of consecutive failed checks required before removing traffic."
+  description = "(Optional; Default 4) Number of consecutive failed checks required before removing traffic."
   type        = number
   default     = 4
 }
 
 variable "liveness_success_threshold" {
-  description = "(Optional) Number of consecutive successful checks required before receiving traffic."
+  description = "(Optional; Default 2) Number of consecutive successful checks required before receiving traffic."
   type        = number
   default     = 2
 }
 
 variable "liveness_check_interval" {
-  description = "(Optional) Interval between health checks."
+  description = "(Optional; Default "5s") Interval between health checks."
   type        = string
   default     = "5s"
 }
 
 variable "liveness_timeout" {
-  description = "(Optional) Time before the check is considered failed."
+  description = "(Optional; Default "4s") Time before the check is considered failed."
   type        = string
   default     = "4s"
 }
 
 variable "liveness_initial_delay" {
-  description = "(Optional) A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic."
+  description = "(Optional; Default "300s") A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic."
   type        = string
   default     = "300s"
 }
@@ -203,7 +203,7 @@ variable "beta_settings" {
 }
 
 variable "serving_status" {
-  description = "Optional) Current serving status of this version. Only the versions with a SERVING status create instances and can be billed."
+  description = "(Optional) Current serving status of this version. Only the versions with a SERVING status create instances and can be billed."
   type        = string
   default     = null
 
@@ -354,7 +354,7 @@ variable "cloud_build_options" {
 # ===== /Deployment Variables ===== #
 
 variable "endpoints_api_service" {
-  description = ""
+  description = "(Optional) Code and application artifacts that make up this version."
   type = list(object({
     name                   = string
     config_id              = string
@@ -379,7 +379,7 @@ variable "entrypoint" {
 
 # ===== Manual Scaling Variables ===== #
 variable "instances" {
-  description = "(Required; Default 1) Number of instances to assign to the service at the start. "
+  description = "(Required; Default 1) Number of instances to assign to the service at the start."
   type        = number
   default     = 1
 
