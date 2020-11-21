@@ -1,11 +1,11 @@
-# App Engine Flex Manual Scaling module
+# App Engine Flex Automatic Scaling module
 
-This module is intended to easily create App Engine Flexible Manual Scaling services using Terraform.
+This module is intended to easily create App Engine Flexible Automatic Scaling services using Terraform.
 
 ## Usage
 
 ```
-module "flexible_manual_scaling" {
+module "flexible_automtic_scaling" {
   version_id = "v1"
   service    = "default"
   runtime    = "nodejs"
@@ -44,8 +44,11 @@ module "flexible_manual_scaling" {
     }
   }
 
-  manual_scaling {
-    instances = 1
+  automatic_scaling {
+    cool_down_period = "120s"
+    cpu_utilization {
+      target_utilization = 0.5
+    }
   }
   noop_on_destroy = true
 }
@@ -55,7 +58,7 @@ A detailed example on how to use it can be found [here](../examples/).
 
 ## Variables
 
-Below is the list of available variables to be used upon creation of the App Engine Flexible Manual Scaling service.
+Below is the list of available variables to be used upon creation of the App Engine Flexible Automatic Scaling service.
 
 | Variable | Description | Default value|
 | --- | --- | -- |
@@ -97,13 +100,32 @@ Below is the list of available variables to be used upon creation of the App Eng
 | [deployment/cloud_build_options](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#cloudbuildoptions) | (Optional) Options for the build operations performed as a part of the version deployment. Only applicable when creating a version using source code directly. | -- |
 | [endpoints_api_service](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#endpointsapiservice) | (Optional) Code and application artifacts that make up this version. | -- |
 | [entrypoint](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#entrypoint) | (Optional) The entrypoint for the application. | -- |
-| [manual_scaling/instances](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#manualscaling) | (Required) Number of instances to assign to the service at the start. | 1 |
+| [automatic_scaling/cool_down_period](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#AutomaticScaling.FIELDS.cool_down_period) | (Optional) The time period that the Autoscaler should wait before it starts collecting information from a new instance. This prevents the autoscaler from collecting information when the instance is initializing, during which the collected usage would not be reliable. | "120s" |
+| [automatic_scaling/cpu_utilization/aggregation_window_length](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#CpuUtilization.FIELDS.aggregation_window_length) | (Optional) Period of time over which CPU utilization is calculated. | -- |
+| [automatic_scaling/cpu_utilization/target_utilization](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#CpuUtilization.FIELDS.target_utilization) | (Required) Target CPU utilization ratio to maintain when scaling. Must be between 0 and 1. | -- |
+| [automatic_scaling/max_concurrent_requests](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#AutomaticScaling.FIELDS.max_concurrent_requests) | (Optional) Number of concurrent requests an automatic scaling instance can accept before the scheduler spawns a new instance. | -- |
+| [automatic_scaling/max_idle_instances](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#AutomaticScaling.FIELDS.max_idle_instances) | (Optional) Maximum number of idle instances that should be maintained for this version. | -- |
+| [automatic_scaling/max_total_instances](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#AutomaticScaling.FIELDS.max_total_instances) | (Optional) Maximum number of instances that should be started to handle requests for this version. | 20 |
+| [automatic_scaling/max_pending_latency](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#AutomaticScaling.FIELDS.max_pending_latency) | (Optional) Maximum amount of time that a request should wait in the pending queue before starting a new instance to handle it. | -- |
+| [automatic_scaling/min_idle_instances](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#AutomaticScaling.FIELDS.min_idle_instances) | (Optional) Minimum number of idle instances that should be maintained for this version. | -- |
+| [automatic_scaling/min_total_instances](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#AutomaticScaling.FIELDS.min_total_instances) | (Optional) Minimum number of running instances that should be maintained for this version.  | 2 |
+| [automatic_scaling/min_pending_latency](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#AutomaticScaling.FIELDS.min_pending_latency) | (Optional) Minimum amount of time a request should wait in the pending queue before starting a new instance to handle it.  | -- |
+| [automatic_scaling/request_utilization/target_request_count_per_second](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#RequestUtilization.FIELDS.target_request_count_per_second) | (Optional) Target requests per second.  | -- |
+| [automatic_scaling/request_utilization/target_concurrent_requests](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#RequestUtilization.FIELDS.target_concurrent_requests) | (Optional) Target number of concurrent requests.  | -- |
+| [automatic_scaling/disk_utilization/target_write_bytes_per_second](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#DiskUtilization.FIELDS.target_write_bytes_per_second) | (Optional) Target bytes written per second.  | -- |
+| [automatic_scaling/disk_utilization/target_write_ops_per_second](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#DiskUtilization.FIELDS.target_write_ops_per_second) | (Optional) Target ops written per second.  | -- |
+| [automatic_scaling/disk_utilization/target_read_bytes_per_second](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#DiskUtilization.FIELDS.target_read_bytes_per_second) | (Optional) Target bytes read per second.  | -- |
+| [automatic_scaling/disk_utilization/target_read_ops_per_second](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#DiskUtilization.FIELDS.target_read_ops_per_second) | (Optional) Target ops read per seconds.  | -- |
+| [automatic_scaling/network_utilization/target_sent_bytes_per_second](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#NetworkUtilization.FIELDS.target_sent_bytes_per_second) | (Optional) Target bytes sent per second.  | -- |
+| [automatic_scaling/network_utilization/target_sent_packets_per_second](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#NetworkUtilization.FIELDS.target_sent_packets_per_second) | (Optional) Target packets sent per second.  | -- |
+| [automatic_scaling/network_utilization/target_received_bytes_per_second](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#NetworkUtilization.FIELDS.target_received_bytes_per_second) | (Optional) Target bytes received per second.  | -- |
+| [automatic_scaling/network_utilization/target_received_packets_per_second](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#NetworkUtilization.FIELDS.target_received_packets_per_second) | (Optional) Target packets received per second.  | -- |
 | noop_on_destroy | (Optional)If set to true, the application version will not be deleted upon running Terraform destroy. | true |
 | delete_service_on_destroy | (Optional)If set to true, the service will be deleted if it is the last version. | false |
 
 ## Outputs
 
-Once the App Engine Flexible Manual Scaling has been successfully created after running the `terraform.apply` command, the following attributes will be displayed as output:
+Once the App Engine Flexible Automatic Scaling has been successfully created after running the `terraform.apply` command, the following attributes will be displayed as output:
 
 | Output | Description |
 | --- | --- |
