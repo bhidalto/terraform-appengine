@@ -1,6 +1,6 @@
 # App Engine Flex Manual Scaling module
 
-This module is intended to easily create Serverless VPC access connectors using Terraform.
+This module is intended to easily create App Engine Flexible Manual Scaling services using Terraform.
 
 ## Usage
 

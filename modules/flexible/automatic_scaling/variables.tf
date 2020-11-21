@@ -385,16 +385,21 @@ variable "cool_down_period" {
 }
 
 variable "cpu_utilization" {
-  description = "Required) Target scaling by CPU usage."
+  description = "(Required) Target scaling by CPU usage."
   type = list(object({
-    target_utilization = number
+    target_utilization        = number
     aggregation_window_length = string
   }))
   default = null
+
+  validation {
+    condition     = var.cpu_utilization != null ? ! contains([for target_utilization in var.cpu_utilization[*].target_utilization : (target_utilization == null || (target_utilization > 0 && target_utilization <= 1)) if target_utilization != null], false) : true
+    error_message = "Target utilization value must be between 0 and 1."
+  }
 }
 
 variable "max_concurrent_requests" {
-  description = "Optional) Number of concurrent requests an automatic scaling instance can accept before the scheduler spawns a new instance."
+  description = "(Optional) Number of concurrent requests an automatic scaling instance can accept before the scheduler spawns a new instance."
   type        = number
   default     = null
 }
@@ -437,7 +442,8 @@ variable "min_pending_latency" {
 variable "request_utilization" {
   description = "(Optional) Target scaling by request utilization."
   type = list(object({
-
+    target_request_count_per_second = number
+    target_concurrent_requests      = string
   }))
   default = null
 }
@@ -445,7 +451,10 @@ variable "request_utilization" {
 variable "disk_utilization" {
   description = "(Optional) Target scaling by disk usage."
   type = list(object({
-
+    target_read_bytes_per_second  = number
+    target_read_ops_per_second    = number
+    target_write_bytes_per_second = number
+    target_write_ops_per_second   = number
   }))
   default = null
 }
@@ -453,7 +462,10 @@ variable "disk_utilization" {
 variable "network_utilization" {
   description = "(Optional) Target scaling by network usage."
   type = list(object({
-
+    target_received_bytes_per_second   = number
+    target_received_packets_per_second = number
+    target_sent_bytes_per_second       = number
+    target_sent_packets_per_second     = number
   }))
   default = null
 }

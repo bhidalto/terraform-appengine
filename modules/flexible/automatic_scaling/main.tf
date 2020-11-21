@@ -147,7 +147,11 @@ resource "google_app_engine_flexible_app_version" "appengine_flexible_automatic_
   automatic_scaling {
     cool_down_period = var.cool_down_period
     dynamic "cpu_utilization" {
-
+      for_each = var.cpu_utilization == null ? [] : list(var.cpu_utilization)
+      content {
+        target_utilization        = var.cpu_utilization[cpu_utilization.key]["target_utilization"]
+        aggregation_window_length = var.cpu_utilization[cpu_utilization.key]["aggregation_window_length"]
+      }
     }
     max_concurrent_requests = var.max_concurrent_requests
     max_idle_instances      = var.max_idle_instances
@@ -157,13 +161,29 @@ resource "google_app_engine_flexible_app_version" "appengine_flexible_automatic_
     min_total_instances     = var.min_total_instances
     min_pending_latency     = var.min_pending_latency
     dynamic "request_utilization" {
-
+      for_each = var.request_utilization == null ? [] : list(var.request_utilization)
+      content {
+        target_request_count_per_second = var.request_utilization[request_utilization.keys]["target_request_count_per_second"]
+        target_concurrent_requests      = var.request_utilization[request_utilization.keys]["target_concurrent_requests"]
+      }
     }
     dynamic "disk_utilization" {
-
+      for_each = var.disk_utilization == null ? [] : list(var.disk_utilization)
+      content {
+        target_read_bytes_per_second  = var.disk_utilization[disk_utilization.keys]["target_read_bytes_per_second"]
+        target_read_ops_per_second    = var.disk_utilization[disk_utilization.keys]["target_read_ops_per_second"]
+        target_write_bytes_per_second = var.disk_utilization[disk_utilization.keys]["target_write_bytes_per_second"]
+        target_write_ops_per_second   = var.disk_utilization[disk_utilization.keys]["target_write_ops_per_second"]
+      }
     }
     dynamic "network_utilization" {
-
+      for_each = var.network_utilization == null ? [] : list(var.network_utilization)
+      content {
+        target_received_bytes_per_second   = var.network_utilization[network_utilization.keys]["target_received_bytes_per_second"]
+        target_received_packets_per_second = var.network_utilization[network_utilization.keys]["target_received_packets_per_second"]
+        target_sent_bytes_per_second       = var.network_utilization[network_utilization.keys]["target_sent_bytes_per_second"]
+        target_sent_packets_per_second     = var.network_utilization[network_utilization.keys]["target_sent_packets_per_second"]
+      }
     }
   }
   noop_on_destroy           = var.noop_on_destroy
