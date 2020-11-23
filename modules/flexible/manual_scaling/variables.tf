@@ -11,7 +11,7 @@ variable "runtime" {
 }
 # ===== Readiness Check Variables ===== #
 variable "readiness_path" {
-  description = "(Required; Default "/readiness") The request path."
+  description = "(Required; Default `/readiness`) The request path."
   type        = string
   default     = "/readiness"
 }
@@ -35,19 +35,19 @@ variable "readiness_success_threshold" {
 }
 
 variable "readiness_check_interval" {
-  description = "(Optional; Default "5s") Interval between health checks."
+  description = "(Optional; Default `5s`) Interval between health checks."
   type        = string
   default     = "5s"
 }
 
 variable "readiness_timeout" {
-  description = "(Optional; Default "4s") Time before the check is considered failed."
+  description = "(Optional; Default `4s`) Time before the check is considered failed."
   type        = string
   default     = "4s"
 }
 
 variable "readiness_app_start_timeout" {
-  description = "(Optional; Default "300s") A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic."
+  description = "(Optional; Default `300s`) A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic."
   type        = string
   default     = "300s"
 }
@@ -55,7 +55,7 @@ variable "readiness_app_start_timeout" {
 
 # ===== Liveness Check Variables ===== #
 variable "liveness_path" {
-  description = "(Required; Default "/liveness") The request path."
+  description = "(Required; Default `/liveness`) The request path."
   type        = string
   default     = "/liveness"
 }
@@ -79,19 +79,19 @@ variable "liveness_success_threshold" {
 }
 
 variable "liveness_check_interval" {
-  description = "(Optional; Default "5s") Interval between health checks."
+  description = "(Optional; Default `5s`) Interval between health checks."
   type        = string
   default     = "5s"
 }
 
 variable "liveness_timeout" {
-  description = "(Optional; Default "4s") Time before the check is considered failed."
+  description = "(Optional; Default `4s`) Time before the check is considered failed."
   type        = string
   default     = "4s"
 }
 
 variable "liveness_initial_delay" {
-  description = "(Optional; Default "300s") A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic."
+  description = "(Optional; Default `300s`) A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic."
   type        = string
   default     = "300s"
 }
