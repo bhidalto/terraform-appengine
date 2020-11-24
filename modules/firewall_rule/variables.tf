@@ -4,8 +4,8 @@ variable "source_range" {
   default     = ""
 
   validation {
-    condition     = length(regexall("^[[:digit:]]{1,3}.[[:digit:]]{1,3}.[[:digit:]]{1,3}.[[:digit:]]{1,3}/[[:digit:]]{1,2}$", var.source_range)) > 0
-    error_message = "The source range must be an IP address or range specified using the CIDR notation."
+    condition     = length(regexall("^([[:digit:]]{1,3}.[[:digit:]]{1,3}.[[:digit:]]{1,3}.[[:digit:]]{1,3}(/[[:digit:]]{1,2})?)$|^[*]$", var.source_range)) > 0
+    error_message = "The source range must be `*` or an IP address or range specified using the CIDR notation."
   }
 }
 
