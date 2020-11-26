@@ -21,7 +21,7 @@ resource "google_app_engine_standard_app_version" "appengine_standard_basic_scal
       }
     }
     dynamic "files" {
-      for_each = var.files == null ? [] : var.files
+      for_each = var.files == null ? [] : list(var.files)
       content {
         name       = var.files[files.key]["name"]
         sha1_sum   = var.files[files.key]["sha1_sum"]
