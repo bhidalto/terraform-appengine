@@ -38,9 +38,9 @@ variable "threadsafe" {
 }
 
 variable "api_version" {
-  description = "(Optional; Default: 1)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
+  description = "(Optional)The version of the API in the given runtime environment that is used by your app. The field is deprecated for newer App Engine runtimes."
   type        = number
-  default     = 1
+  default     = null
 }
 
 variable "env_variables" {
@@ -179,7 +179,7 @@ variable "vpc_access_connector" {
   default = null
 
   validation {
-    condition     = var.vpc_access_connector != null ? length(regexall("^/\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", (var.vpc_access_connector.name == null ? "" : var.vpc_access_connector.name))) > 0 : true
+    condition     = var.vpc_access_connector != null ? length(regexall("^\\bprojects\\b/[[:word:]-]+/\\blocations\\b/[[:word:]-]+/\\bconnectors\\b/[[:word:]-]+$", (var.vpc_access_connector.name == null ? "" : var.vpc_access_connector.name))) > 0 : true
     error_message = "Format of VPC access connector must use the following format `projects/[$PROJECT_NAME]/locations/[$CONNECTOR_LOCATION]/connectors/[$CONNECTOR_NAME]`."
   }
 }
