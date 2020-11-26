@@ -9,7 +9,6 @@ variable "ssl_settings" {
   type = object({
     certificate_id                 = string,
     ssl_management_type            = string,
-    pending_managed_certificate_id = string
   })
   default = null
 
@@ -25,7 +24,7 @@ variable "override_strategy" {
   default     = null
 
   validation {
-    condition     = var.override_strategy != null || contains(["STRICT", "OVERRIDE"], var.override_strategy == null ? "" : var.override_strategy)
+    condition     = var.override_strategy != null ? contains(["STRICT", "OVERRIDE"],var.override_strategy) : true
     error_message = "The override strategy field must be one of [STRICT, OVERRIDE]."
   }
 }
