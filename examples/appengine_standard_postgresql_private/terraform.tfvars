@@ -33,7 +33,7 @@ instance_class  = "F1"
 
 # Variables for Zip Module
 zip = {
-  source_url  = "https://storage.googleapis.com/javafileswave23/gae-postgres-py27.zip"
+  source_url  = "https://storage.googleapis.com/$MY_BUCKET/gae-postgres-py27.zip"
   files_count = null
 }
 

@@ -5,7 +5,7 @@ runtime         = "python27"
 threadsafe      = true
 instance_class  = "B1"
 zip = {
-  source_url  = "https://storage.googleapis.com/elated-badge-296516.appspot.com/helloworld-new-service.zip"
+  source_url  = "https://storage.googleapis.com/$MY_BUCKET/helloworld-new-service.zip"
   files_count = null
 }
 handlers = [{

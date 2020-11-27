@@ -7,7 +7,7 @@ instance_class  = "B1"
 
 # Variables for Zip Module
 zip = {
-  source_url  = "https://storage.googleapis.com/javafileswave23/gae-helloworld.zip"
+  source_url  = "https://storage.googleapis.com/$MY_BUCKET/gae-helloworld.zip"
   files_count = null
 }
 
