@@ -4,7 +4,7 @@ runtime_v1         = "python27"
 threadsafe_v1      = true
 instance_class_v1  = "B1"
 zip_v1 = {
-  source_url  = "https://storage.googleapis.com/elated-badge-296516.appspot.com/helloworld-v1.zip"
+  source_url  = "https://storage.googleapis.com/$MY_BUCKET/helloworld-v1.zip"
   files_count = null
 }
 handlers_v1 = [{
@@ -28,7 +28,7 @@ runtime_v2         = "python27"
 threadsafe_v2      = true
 instance_class_v2  = "B1"
 zip_v2 = {
-  source_url  = "https://storage.googleapis.com/elated-badge-296516.appspot.com/helloworld-v2.zip"
+  source_url  = "https://storage.googleapis.com/$MY_BUCKET/helloworld-v2.zip"
   files_count = null
 }
 handlers_v2 = [{
