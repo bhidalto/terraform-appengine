@@ -32,9 +32,9 @@ variable "runtime" {
 }
 
 variable "threadsafe" {
-  description = "(Optional; Default True) Whether the application should use concurrent requests or not. Only appliable for python27 and java8 runtimes."
+  description = "(Optional) Whether the application should use concurrent requests or not. Only appliable for python27 and java8 runtimes."
   type        = bool
-  default     = true
+  default     = null
 }
 
 variable "api_version" {
@@ -64,7 +64,7 @@ variable "delete_service_on_destroy" {
 variable "instance_class" {
   description = "(Optional; Default: F1) Instance class that is used to run this version. Valid values are AutomaticScaling: F1, F2, F4, F4_1G BasicScaling or ManualScaling: B1, B2, B4, B4_1G, B8 Defaults to F1 for AutomaticScaling and B2 for ManualScaling and BasicScaling. If no scaling is specified, AutomaticScaling is chosen."
   type        = string
-  default     = "F1"
+  default     = "B1"
 
   validation {
     condition     = contains(["B1", "B2", "B4", "B4_1G", "B8", "F1", "F2", "F4", "F4_1G"], var.instance_class)
