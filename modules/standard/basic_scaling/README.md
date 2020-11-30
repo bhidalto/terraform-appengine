@@ -64,7 +64,7 @@ Below is the list of available variables to be used upon creation of the App Eng
 
 ## Outputs
 
-Once the App Engine Flexible Basic Scaling has been successfully created after running the `terraform.apply` command, the following attributes will be displayed as output:
+Once the App Engine Standard Basic Scaling has been successfully created after running the `terraform.apply` command, the following attributes will be displayed as output:
 
 | Output | Description |
 | --- | --- |
