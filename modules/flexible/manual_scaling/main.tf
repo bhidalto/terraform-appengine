@@ -149,4 +149,9 @@ resource "google_app_engine_flexible_app_version" "appengine_flexible_manual_sca
   }
   noop_on_destroy           = var.noop_on_destroy
   delete_service_on_destroy = var.delete_service_on_destroy
+  timeouts {
+      create = "60m"
+      update = "60m"
+      delete = "60m"
+  }
 }
