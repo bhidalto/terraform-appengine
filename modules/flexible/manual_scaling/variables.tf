@@ -1,13 +1,9 @@
 # ===== Required Variables ===== #
 variable "runtime" {
-  description = "(Required; Default: python27) The runtime that will be used by App Engine. Supported runtimes are: python27, python37, python38, java8, java11, php55, php73, php74, ruby25, go111, go112, go113, go114, nodejs10, nodejs12."
+  description = "(Required; Default: python) The runtime that will be used by App Engine. Supported runtimes are: python27, python37, python38, java8, java11, php55, php73, php74, ruby25, go111, go112, go113, go114, nodejs10, nodejs12."
   type        = string
-  default     = "python27"
+  default     = "python"
 
-  validation {
-    condition     = contains(["python27", "python37", "python38", "java8", "java11", "php55", "php73", "php74", "ruby25", "go111", "go112", "go113", "go114", "nodejs10", "nodejs12"], var.runtime)
-    error_message = "The specified runtime does not match any of the supported runtimes: \n - Python: python27, python37, python38 \n - Java: java8, java11 \n - PHP: php55, php73, php74 \n - Ruby: ruby25 \n - Go: go111, go112, go113, go114 \n - Node.js: nodejs10, nodejs12."
-  }
 }
 # ===== Readiness Check Variables ===== #
 variable "readiness_path" {
@@ -79,9 +75,9 @@ variable "liveness_success_threshold" {
 }
 
 variable "liveness_check_interval" {
-  description = "(Optional; Default `5s`) Interval between health checks."
+  description = "(Optional; Default `30s`) Interval between health checks."
   type        = string
-  default     = "5s"
+  default     = "30s"
 }
 
 variable "liveness_timeout" {
@@ -135,7 +131,7 @@ variable "inbound_services" {
 variable "instance_class" {
   description = "(Optional; Default: F1) Instance class that is used to run this version. Valid values are AutomaticScaling: F1, F2, F4, F4_1G BasicScaling or ManualScaling: B1, B2, B4, B4_1G, B8 Defaults to F1 for AutomaticScaling and B2 for ManualScaling and BasicScaling. If no scaling is specified, AutomaticScaling is chosen."
   type        = string
-  default     = "F1"
+  default     = "B1"
 
   validation {
     condition     = contains(["B1", "B2", "B4", "B4_1G", "B8", "F1", "F2", "F4", "F4_1G"], var.instance_class)

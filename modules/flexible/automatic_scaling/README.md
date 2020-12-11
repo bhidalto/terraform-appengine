@@ -62,7 +62,7 @@ Below is the list of available variables to be used upon creation of the App Eng
 
 | Variable | Description | Default value|
 | --- | --- | -- |
-| [runtime](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#runtime) | (Required) The runtime that will be used by App Engine. Supported runtimes are: python27, python37, python38, java8, java11, php55, php73, php74, ruby25, go111, go112, go113, go114, nodejs10, nodejs12. | python27 |
+| [runtime](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#runtime) | (Required) The runtime that will be used by App Engine. | python |
 | [readiness_check](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#readiness_checks) | (Required) Configures readiness health checking for instances. Unhealthy instances are not put into the backend traffic rotation. Structure is documented below. | -- |
 | [readiness_check/path](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#readiness_path) | (Required) The request path. | "/readiness" |
 | [readiness_check/host](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#ReadinessCheck.FIELDS.host) | (Optional) Host header to send when performing a HTTP Readiness check. | -- |
@@ -76,7 +76,7 @@ Below is the list of available variables to be used upon creation of the App Eng
 | [liveness_check/host](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#LivenessCheck.FIELDS.host) | (Optional) Host header to send when performing a HTTP Readiness check. | -- |
 | [liveness_check/failure_threshold](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#liveness_failure) | (Optional) Number of consecutive failed checks required before considering the VM unhealthy. | 4 |
 | [liveness_check/success_threshold](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#liveness_success) | (Optional) Number of consecutive successful checks required before receiving traffic. | 2 |
-| [liveness_check/check_interval](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#liveness_interval) | (Optional) Interval between health checks. | "5s" |
+| [liveness_check/check_interval](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#liveness_interval) | (Optional) Interval between health checks. | "30s" |
 | [liveness_check/timeout](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#liveness_timeout) | (Optional) Time before the check is considered failed. | "4s" |
 | [liveness_check/initial_delay](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#delay) | (Optional) A maximum time limit on application initialization, measured from moment the application successfully replies to a healthcheck until it is ready to serve traffic. | "300s" |
 | [service_version](https://cloud.google.com/appengine/docs/flexible/python/reference/app-yaml#service) | (Optional) Name of the App Engine version of the Service that will be deployed. | -- |
